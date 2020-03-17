@@ -34,7 +34,7 @@ func NewScheduler(userSource users.Source, shiftDurationDays int) (*Scheduler, e
 }
 
 // Schedule creates a new Schedule from start (inclusive) to stop (exclusive). Will return a 1-entry schedule if
-// stop is after start.
+// stop is before start.
 func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) {
 	return s.ExtendSchedule(&schedule.Schedule{
 		Shifts: []*schedule.Shift{{

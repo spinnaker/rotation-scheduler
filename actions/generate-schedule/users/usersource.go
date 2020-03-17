@@ -8,7 +8,6 @@ import (
 
 // Source represents a source of usernames for rotation
 type Source interface {
-	//GetUsers() ([]string, error)
 	StartAfter(user string) error
 	NextUser() string
 }
@@ -28,18 +27,6 @@ func NewStaticSource(users ...string) *StaticSource {
 	ss.nextUser = ss.users.Front()
 	return ss
 }
-
-//func (ss *StaticSource) GetUsers() ([]string, error) {
-//	if ss.users.Front() == nil {
-//		return nil, fmt.Errorf("empty user list")
-//	}
-//
-//	users := make([]string, ss.users.Len())
-//	for user := ss.users.Front(); user != nil; user.Next() {
-//		users = append(users, user.Value.(string))
-//	}
-//	return users, nil
-//}
 
 func (ss *StaticSource) StartAfter(user string) error {
 	for c := ss.users.Front(); c != nil; c = c.Next() {

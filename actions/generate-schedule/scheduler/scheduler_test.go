@@ -25,23 +25,6 @@ func TestSchedule(t *testing.T) {
 		t.Fatalf("error creating scheduler: %v", err)
 	}
 
-	sched1 := &schedule.Schedule{
-		Shifts: []*schedule.Shift{
-			{
-				StartDate: "Wed 01 Jan 2020",
-				User:      "first",
-			},
-			{
-				StartDate: "Thu 02 Jan 2020",
-				User:      "second",
-			},
-			{
-				StartDate: "Fri 03 Jan 2020",
-				User:      "third",
-			},
-		},
-	}
-
 	for _, tc := range []struct {
 		desc    string
 		start   time.Time
@@ -54,7 +37,22 @@ func TestSchedule(t *testing.T) {
 			start:   time.Date(2020, 01, 01, 0, 0, 0, 0, time.UTC),
 			stop:    time.Date(2020, 01, 04, 0, 0, 0, 0, time.UTC),
 			wantErr: false,
-			want:    sched1,
+			want: &schedule.Schedule{
+				Shifts: []*schedule.Shift{
+					{
+						StartDate: "Wed 01 Jan 2020",
+						User:      "first",
+					},
+					{
+						StartDate: "Thu 02 Jan 2020",
+						User:      "second",
+					},
+					{
+						StartDate: "Fri 03 Jan 2020",
+						User:      "third",
+					},
+				},
+			},
 		},
 		{
 			desc:    "start after stop",
