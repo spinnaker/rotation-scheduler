@@ -36,52 +36,54 @@ func NewScheduler(userSource users.Source, shiftDurationDays int) (*Scheduler, e
 // Schedule creates a new Schedule from start (inclusive) to stop (exclusive). Will return a 1-entry schedule if
 // stop is before start.
 func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) {
-	return s.ExtendSchedule(&schedule.Schedule{
-		Shifts: []*schedule.Shift{{
-			StartDate: start.Format(DateFormat),
-			User:      s.userSource.NextUser(),
-		}},
-	}, stop)
+	sched := &schedule.Schedule{
+		Shifts: []*schedule.Shift{
+			{
+				StartDate: start.Format(DateFormat),
+				User:      s.userSource.NextUser(),
+			},
+		},
+	}
+	if err := s.ExtendSchedule(sched, stop); err != nil {
+		return nil, err
+	}
+	return sched, nil
 }
 
 // ExtendSchedule takes a previously generated schedule and extends it. The user rotation continues as normal from the
 // last shift in the schedule.
-func (s *Scheduler) ExtendSchedule(previousSchedule *schedule.Schedule, stop time.Time) (*schedule.Schedule, error) {
-	if err := validatePreviousShifts(previousSchedule.Shifts); err != nil {
-		return nil, fmt.Errorf("error validating previous shifts: %v", err)
+func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stop time.Time) error {
+	if err := validatePreviousShifts(sched.Shifts); err != nil {
+		return fmt.Errorf("error validating input shifts: %v", err)
 	}
 
-	newSchedule := &schedule.Schedule{
-		Shifts: previousSchedule.Shifts,
-	}
-
-	mostRecentShift := previousSchedule.Shifts[len(previousSchedule.Shifts)-1]
+	mostRecentShift := sched.Shifts[len(sched.Shifts)-1]
 	if err := s.userSource.StartAfter(mostRecentShift.User); err != nil {
-		return nil, fmt.Errorf("error finding previous shift owner (%v) in user source: %v", mostRecentShift.User, err)
+		return fmt.Errorf("error finding input shift owner (%v) in user source: %v", mostRecentShift.User, err)
 	}
 
-	for start := s.startTime(mostRecentShift); start.Before(stop); start = start.AddDate(0, 0, s.shiftDurationDays) {
-		newSchedule.Shifts = append(newSchedule.Shifts, &schedule.Shift{
+	for start := s.startTime(mostRecentShift); start.Before(stop); start = s.nextShiftTime(start) {
+		sched.Shifts = append(sched.Shifts, &schedule.Shift{
 			User:      s.userSource.NextUser(),
 			StartDate: start.Format(DateFormat),
 		})
 	}
 
-	return newSchedule, nil
+	return nil
 }
 
 func validatePreviousShifts(previousShifts []*schedule.Shift) error {
 	if previousShifts == nil || len(previousShifts) == 0 {
-		fmt.Printf("No previous shifts found. Starting from scratch.")
+		fmt.Printf("No input shifts found. Starting from scratch.")
 		return nil
 	}
 
 	for i, shift := range previousShifts {
 		if _, err := time.Parse(DateFormat, shift.StartDate); err != nil {
-			return fmt.Errorf("error in previous shift entry %v, invalid value: %v, err: %v", i, shift.StartDate, err)
+			return fmt.Errorf("error in input shift entry %v, invalid value: %v, err: %v", i, shift.StartDate, err)
 		}
 		if shift.User == "" {
-			return fmt.Errorf("user cannot be empty in previous shift entry %v", i)
+			return fmt.Errorf("user cannot be empty in input shift entry %v", i)
 		}
 	}
 
@@ -94,5 +96,9 @@ func (s *Scheduler) startTime(mostRecentShift *schedule.Shift) time.Time {
 		return time.Now() // Should never happen with validation.
 	}
 
-	return start.AddDate(0, 0, s.shiftDurationDays)
+	return s.nextShiftTime(start)
+}
+
+func (s *Scheduler) nextShiftTime(previous time.Time) time.Time {
+	return previous.AddDate(0, 0, s.shiftDurationDays)
 }

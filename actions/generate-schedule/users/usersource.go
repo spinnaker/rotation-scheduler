@@ -1,7 +1,7 @@
 package users
 
 import (
-	"container/list"
+	"container/ring"
 	"fmt"
 	"sort"
 )
@@ -14,39 +14,33 @@ type Source interface {
 
 // StaticSource is a base implementation of static list of usernames.
 type StaticSource struct {
-	users    *list.List
-	nextUser *list.Element
+	nextUser *ring.Ring
 }
 
 func NewStaticSource(users ...string) *StaticSource {
 	sort.Strings(users)
-	ss := &StaticSource{users: list.New()}
+	ss := &StaticSource{nextUser: ring.New(len(users))}
 	for _, u := range users {
-		ss.users.PushBack(u)
+		ss.nextUser.Value = u
+		ss.nextUser = ss.nextUser.Next()
 	}
-	ss.nextUser = ss.users.Front()
 	return ss
 }
 
 func (ss *StaticSource) StartAfter(user string) error {
-	for c := ss.users.Front(); c != nil; c = c.Next() {
-		if user == c.Value.(string) {
-			ss.nextUser = c
-			ss.NextUser()
+	for linksChecked := 0; linksChecked <= ss.nextUser.Len(); linksChecked++ {
+		if user == ss.nextUser.Prev().Value.(string) {
+			// User found, and ring is currently in correct state.
 			return nil
 		}
+		ss.nextUser = ss.nextUser.Next()
 	}
 
 	return fmt.Errorf("cannot start after user %v, user not found", user)
 }
 
 func (ss *StaticSource) NextUser() string {
-	returnVal := ss.nextUser.Value.(string)
-
+	u := ss.nextUser.Value.(string)
 	ss.nextUser = ss.nextUser.Next()
-	if ss.nextUser == nil {
-		ss.nextUser = ss.users.Front()
-	}
-
-	return returnVal
+	return u
 }

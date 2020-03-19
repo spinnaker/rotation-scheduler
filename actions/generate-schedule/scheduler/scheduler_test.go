@@ -130,22 +130,22 @@ func TestExtendSchedule(t *testing.T) {
 	}
 
 	for _, tc := range []struct {
-		desc     string
-		previous *schedule.Schedule
-		stop     time.Time
-		wantErr  bool
-		want     *schedule.Schedule
+		desc    string
+		input   *schedule.Schedule
+		stop    time.Time
+		wantErr bool
+		want    *schedule.Schedule
 	}{
 		{
-			desc:     "happy path",
-			previous: prevSchedule,
-			stop:     time.Date(2020, 01, 05, 0, 0, 0, 0, time.UTC),
-			wantErr:  false,
-			want:     newSchedule,
+			desc:    "happy path",
+			input:   prevSchedule,
+			stop:    time.Date(2020, 01, 05, 0, 0, 0, 0, time.UTC),
+			wantErr: false,
+			want:    newSchedule,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			got, err := s.ExtendSchedule(tc.previous, tc.stop)
+			err := s.ExtendSchedule(tc.input, tc.stop)
 			if tc.wantErr && err == nil {
 				t.Errorf("err expected and not received.")
 			} else if !tc.wantErr && err != nil {
@@ -155,9 +155,9 @@ func TestExtendSchedule(t *testing.T) {
 				return
 			}
 
-			if !proto.Equal(tc.want, got) {
+			if !proto.Equal(tc.want, tc.input) {
 				wantStr := scheduleToString(tc.want, t)
-				gotStr := scheduleToString(got, t)
+				gotStr := scheduleToString(tc.input, t)
 				t.Errorf("got schedule different from expected.\nWant:\n%v\n\nGot:\n%v\n", wantStr, gotStr)
 			}
 		})
