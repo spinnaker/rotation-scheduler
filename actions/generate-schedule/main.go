@@ -84,7 +84,7 @@ func main() {
 	if *outFilepath != "" {
 		destFilepath = *outFilepath
 	}
-	if err := ioutil.WriteFile(destFilepath, scheduleBytes, 0644); err != nil {
+	if err := ioutil.WriteFile(destFilepath, scheduleBytes, 0666); err != nil {
 		log.Fatalf("Error writing out new schedule: %v", err)
 	}
 }
