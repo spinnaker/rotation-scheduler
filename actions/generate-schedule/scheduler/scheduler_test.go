@@ -164,24 +164,6 @@ func TestExtendSchedule(t *testing.T) {
 	}
 }
 
-func TestValidatePreviousShifts(t *testing.T) {
-	shifts := []*schedule.Shift{
-		{
-			StartDate: "foobar",
-		},
-	}
-
-	if err := validatePreviousShifts(shifts); err == nil {
-		t.Errorf("expected error from invalid date")
-	}
-
-	shifts[0].StartDate = time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC).Format(DateFormat)
-
-	if err := validatePreviousShifts(shifts); err == nil {
-		t.Errorf("expected error from missing user")
-	}
-}
-
 func scheduleToString(s *schedule.Schedule, t *testing.T) string {
 	j, err := s.MarshalJSON()
 	if err != nil {

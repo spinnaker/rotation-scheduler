@@ -52,8 +52,8 @@ func main() {
 
 	var newSchedule *schedule.Schedule
 	if *previousSchedulePath != "" {
-		previousSchedule, err := parsePreviousSchedule(*previousSchedulePath)
-		if err != nil {
+		previousSchedule := &schedule.Schedule{}
+		if err := previousSchedule.FromYAMLFile(*previousSchedulePath); err != nil {
 			log.Fatalf("Error parsing previous schedule: %v", err)
 		}
 
@@ -117,17 +117,4 @@ func validateFlags() error {
 	}
 
 	return nil
-}
-
-func parsePreviousSchedule(previousSchedulePath string) (*schedule.Schedule, error) {
-	prevBytes, err := ioutil.ReadFile(previousSchedulePath)
-	if err != nil {
-		return nil, err
-	}
-
-	prevSched := &schedule.Schedule{}
-	if err := yaml.Unmarshal(prevBytes, prevSched); err != nil {
-		return nil, err
-	}
-	return prevSched, nil
 }

@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	DateFormat = "Mon 02 Jan 2006"
-)
-
 // Scheduler creates or extends a new rotation schedule.
 type Scheduler struct {
 	userSource        users.Source
@@ -39,7 +35,7 @@ func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) 
 	sched := &schedule.Schedule{
 		Shifts: []*schedule.Shift{
 			{
-				StartDate: start.Format(DateFormat),
+				StartDate: start.Format(schedule.DateFormat),
 				User:      s.userSource.NextUser(),
 			},
 		},
@@ -53,10 +49,6 @@ func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) 
 // ExtendSchedule takes a previously generated schedule and extends it. The user rotation continues as normal from the
 // last shift in the schedule.
 func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stop time.Time) error {
-	if err := validatePreviousShifts(sched.Shifts); err != nil {
-		return fmt.Errorf("error validating input shifts: %v", err)
-	}
-
 	mostRecentShift := sched.Shifts[len(sched.Shifts)-1]
 	if err := s.userSource.StartAfter(mostRecentShift.User); err != nil {
 		return fmt.Errorf("error finding input shift owner (%v) in user source: %v", mostRecentShift.User, err)
@@ -65,33 +57,15 @@ func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stop time.Time) err
 	for start := s.startTime(mostRecentShift); start.Before(stop); start = s.nextShiftTime(start) {
 		sched.Shifts = append(sched.Shifts, &schedule.Shift{
 			User:      s.userSource.NextUser(),
-			StartDate: start.Format(DateFormat),
+			StartDate: start.Format(schedule.DateFormat),
 		})
 	}
 
 	return nil
 }
 
-func validatePreviousShifts(previousShifts []*schedule.Shift) error {
-	if previousShifts == nil || len(previousShifts) == 0 {
-		fmt.Printf("No input shifts found. Starting from scratch.")
-		return nil
-	}
-
-	for i, shift := range previousShifts {
-		if _, err := time.Parse(DateFormat, shift.StartDate); err != nil {
-			return fmt.Errorf("error in input shift entry %v, invalid value: %v, err: %v", i, shift.StartDate, err)
-		}
-		if shift.User == "" {
-			return fmt.Errorf("user cannot be empty in input shift entry %v", i)
-		}
-	}
-
-	return nil // It's all good.
-}
-
 func (s *Scheduler) startTime(mostRecentShift *schedule.Shift) time.Time {
-	start, err := time.Parse(DateFormat, mostRecentShift.StartDate)
+	start, err := time.Parse(schedule.DateFormat, mostRecentShift.StartDate)
 	if err != nil {
 		return time.Now() // Should never happen with validation.
 	}
