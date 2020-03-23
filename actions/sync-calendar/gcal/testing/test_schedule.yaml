@@ -1,0 +1,11 @@
+# Generated from: go run actions/generate-schedule/main.go --start 2020-06-01 --stop 2020-07-01 --users abc,lmn,xyz --out actions/sync-calendar/gcal/testing/test_schedule.yaml
+shifts:
+- startDate: Mon 01 Jun 2020
+  user: abc
+- startDate: Mon 08 Jun 2020
+  user: lmn
+- startDate: Mon 15 Jun 2020
+  user: xyz
+- startDate: Mon 22 Jun 2020
+  stopDate: Sun 28 Jun 2020
+  user: abc
