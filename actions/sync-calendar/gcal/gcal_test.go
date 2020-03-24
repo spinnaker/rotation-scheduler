@@ -16,6 +16,7 @@ func TestSchedule(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot initializer HTTP replayer: %v", err)
 	}
+	defer replayer.Close()
 
 	client, err := replayer.Client(context.Background())
 	if err != nil {

@@ -32,7 +32,7 @@
       "ID": "84402544b06e3ae2",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/clear?alt=json\u0026prettyPrint=false",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/clear?alt=json\u0026prettyPrint=false",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -83,7 +83,7 @@
       "ID": "b33fb62e16492dbf",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -157,7 +157,7 @@
       "ID": "2f0c36b01b8a8a9b",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -231,7 +231,7 @@
       "ID": "7827150456c2ef93",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -305,7 +305,7 @@
       "ID": "d8660366c9aa54a4",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -379,7 +379,7 @@
       "ID": "e060ba2ecc226863",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.mtls.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
         "Header": {
           "Accept-Encoding": [
             "gzip"
