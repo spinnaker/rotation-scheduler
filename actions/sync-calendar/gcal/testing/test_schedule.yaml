@@ -8,6 +8,7 @@ shifts:
   user: xyz
 - startDate: Mon 22 Jun 2020
   user: abc
+  userOverride: xyz
 - startDate: Mon 29 Jun 2020
   user: lmn
 

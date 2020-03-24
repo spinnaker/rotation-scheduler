@@ -37,7 +37,7 @@ func TestEstimateStopTime(t *testing.T) {
 					},
 				},
 			},
-			want: time.Date(2020, 1, 1+defaultStopTimeDurationDays, 0, 0, 0, 0, time.UTC),
+			want: time.Date(2020, 1, 1+defaultStopTimeDays, 0, 0, 0, 0, time.UTC),
 		},
 		{
 			desc: "2+ shifts",

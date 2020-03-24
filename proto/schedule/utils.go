@@ -9,8 +9,9 @@ import (
 
 const (
 	DateFormat              = "Mon 02 Jan 2006"
+	defaultStopTimeDays 	= 7
 	dayDuration             = 24 * time.Hour
-	defaultStopTimeDuration = 7 * dayDuration
+	defaultStopTimeDuration = defaultStopTimeDays * dayDuration
 )
 
 func (s *Schedule) Validate() error {

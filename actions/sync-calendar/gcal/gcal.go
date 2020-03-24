@@ -91,6 +91,8 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 				return fmt.Errorf("err parsing next shift (index %v) start date (%v): %v", i, nextShift.StartDate, err)
 			}
 		}
+		// Calendar's end time is exclusive, so this is the inclusive date for printed output.
+		inclusiveEndDate := endDate.Add(-24 * time.Hour).Format(DateFormat)
 
 		u := shift.User
 		if shift.UserOverride != "" {
@@ -98,9 +100,11 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 		}
 		event := &calendar.Event{
 			Summary: fmt.Sprintf("%v Spinnaker OSS Build Cop", u),
+			// Start.Date is inclusive.
 			Start: &calendar.EventDateTime{
 				Date: startDate.Format(DateFormat),
 			},
+			// End.Date is exclusive
 			End: &calendar.EventDateTime{
 				Date: endDate.Format(DateFormat),
 			},
@@ -110,7 +114,7 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 		if err != nil {
 			return fmt.Errorf("insert error: %v", err)
 		} else {
-			log.Printf("Added shift for %v from %v to %v", shift.User, event.Start.Date, event.End.Date)
+			log.Printf("Added shift for %v from %v to %v", u, event.Start.Date, inclusiveEndDate)
 		}
 	}
 

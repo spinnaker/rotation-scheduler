@@ -85,7 +85,7 @@ func main() {
 		log.Fatalf("Error clearing calendar: %v", err)
 	}
 
-	if err := cal.Schedule(sched, stop.AddDate(0, 0, 7)); err != nil {
+	if err := cal.Schedule(sched, stop); err != nil {
 		log.Fatalf("Error creating new schedule: %v", err)
 	}
 }
