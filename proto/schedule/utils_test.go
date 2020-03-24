@@ -104,6 +104,31 @@ func TestValidatePreviousShifts(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			desc: "missing user",
+			sched: &Schedule{
+				Shifts: []*Shift{
+					{
+						StartDate: "Wed 01 Jan 2020",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			desc: "out of order",
+			sched: &Schedule{
+				Shifts: []*Shift{
+					{
+						StartDate: "Thu 02 Jan 2020",
+					},
+					{
+						StartDate: "Wed 01 Jan 2020",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
 			desc: "all good",
 			sched: &Schedule{
 				Shifts: []*Shift{

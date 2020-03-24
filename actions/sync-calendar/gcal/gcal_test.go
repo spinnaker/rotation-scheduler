@@ -32,11 +32,6 @@ func TestSchedule(t *testing.T) {
 		t.Fatalf("cannot read schedule from yaml file: %v", err)
 	}
 
-	err = g.Clear()
-	if err != nil {
-		t.Errorf("error clearing calendar: %v", err)
-	}
-
 	stop, err := s.EstimateStopTime()
 	if err != nil {
 		t.Errorf("cannot calculate stop time: %v", err)

@@ -81,10 +81,6 @@ func main() {
 		log.Fatalf("Error initializing Calendar service: %v", err)
 	}
 
-	if err := cal.Clear(); err != nil {
-		log.Fatalf("Error clearing calendar: %v", err)
-	}
-
 	if err := cal.Schedule(sched, stop); err != nil {
 		log.Fatalf("Error creating new schedule: %v", err)
 	}

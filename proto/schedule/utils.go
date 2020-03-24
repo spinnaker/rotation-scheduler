@@ -24,13 +24,19 @@ func (s *Schedule) Validate() error {
 		return nil
 	}
 
+	var previousShiftTime time.Time
 	for i, shift := range s.Shifts {
-		if _, err := time.Parse(DateFormat, shift.StartDate); err != nil {
+		shiftTime, err := time.Parse(DateFormat, shift.StartDate)
+		if err != nil {
 			return fmt.Errorf("error in input shift entry %v, invalid value: %v, err: %v", i, shift.StartDate, err)
 		}
 		if shift.User == "" {
 			return fmt.Errorf("user cannot be empty in input shift entry %v", i)
 		}
+		if !previousShiftTime.IsZero() && previousShiftTime.After(shiftTime) {
+			return fmt.Errorf("shifts out of order: shift time %v found after %v", previousShiftTime, shiftTime)
+		}
+		previousShiftTime = shiftTime
 	}
 
 	return nil // It's all good.

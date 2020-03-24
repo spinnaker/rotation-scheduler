@@ -42,10 +42,6 @@ func main() {
 		log.Fatalf("Error generating stop time: %v", stopTime)
 	}
 
-	if err := cal.Clear(); err != nil {
-		log.Fatalf("Error clearing calendar")
-	}
-
 	if err := cal.Schedule(sched, stopTime); err != nil {
 		log.Fatalf("Error syncing schedule: %v", err)
 	}

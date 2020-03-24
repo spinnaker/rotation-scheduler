@@ -26,7 +26,7 @@ type GCal struct {
 	svc        *calendar.Service
 }
 
-// NewGCal wraps the calendar specified using the client. CalendarID should be a user's primary calendar (not a shared,
+// NewGCal wraps the calendar specified using the client. CalendarID should be a user's primary calendar (not a shared
 // calendar), because the Clear() method only works on primary calendars.
 func NewGCal(calendarID string, client *http.Client) (*GCal, error) {
 	if calendarID == "" {
@@ -64,17 +64,19 @@ func Client(calendarID, jsonCredentialsPath string) (*http.Client, error) {
 	return jwtConfig.Client(context.Background()), nil
 }
 
-// Clear all events from the calendar
-func (g *GCal) Clear() error {
-	return g.svc.Calendars.Clear(g.CalendarID).Do()
-}
-
-// Add all events from Schedule S to the calendar.
+// Clears all events on the calendar and replaces them with events from Schedule S.
 func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 	if err := s.Validate(); err != nil {
 		return fmt.Errorf("schedule is invalid: %v", err)
 	}
 
+	type expandedEvent struct {
+		event *calendar.Event
+		user string
+		inclusiveEndDate string
+	}
+
+	expEvents := make([]*expandedEvent, len(s.Shifts))
 	for i, shift := range s.Shifts {
 		startDate, err := time.Parse(schedule.DateFormat, shift.StartDate)
 		if err != nil {
@@ -91,8 +93,6 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 				return fmt.Errorf("err parsing next shift (index %v) start date (%v): %v", i, nextShift.StartDate, err)
 			}
 		}
-		// Calendar's end time is exclusive, so this is the inclusive date for printed output.
-		inclusiveEndDate := endDate.Add(-24 * time.Hour).Format(DateFormat)
 
 		u := shift.User
 		if shift.UserOverride != "" {
@@ -109,12 +109,25 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 				Date: endDate.Format(DateFormat),
 			},
 		}
+		expEvents[i] = &expandedEvent{
+			event: event,
+			user: u,
+			// Calendar's end time is exclusive, so this is the inclusive date for printed output.
+			inclusiveEndDate: endDate.Add(-24 * time.Hour).Format(DateFormat),
+		}
+	}
 
-		_, err = g.svc.Events.Insert(g.CalendarID, event).SendUpdates("none").Do()
+	// Clear all events from the calendar
+	if err := g.svc.Calendars.Clear(g.CalendarID).Do(); err != nil {
+		return fmt.Errorf("error clearing calendar: %v", err)
+	}
+
+	for _, ee := range expEvents {
+		_, err := g.svc.Events.Insert(g.CalendarID, ee.event).SendUpdates("none").Do()
 		if err != nil {
 			return fmt.Errorf("insert error: %v", err)
 		} else {
-			log.Printf("Added shift for %v from %v to %v", u, event.Start.Date, inclusiveEndDate)
+			log.Printf("Added shift for %v from %v to %v", ee.user, ee.event.Start.Date, ee.inclusiveEndDate)
 		}
 	}
 
