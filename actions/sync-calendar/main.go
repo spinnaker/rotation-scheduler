@@ -32,8 +32,8 @@ func main() {
 		log.Fatalf("Error initializing Calendar service: %v", err)
 	}
 
-	sched := &schedule.Schedule{}
-	if err := sched.FromYAMLFile(*schedPath); err != nil {
+	sched, err := schedule.FromYAMLFile(*schedPath)
+	if err != nil {
 		log.Fatalf("Error parsing schedule: %v", err)
 	}
 

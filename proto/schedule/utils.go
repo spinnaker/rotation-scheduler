@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	DateFormat                  = "Mon 02 Jan 2006"
-	defaultStopTimeDurationDays = 7
+	DateFormat              = "Mon 02 Jan 2006"
+	dayDuration             = 24 * time.Hour
+	defaultStopTimeDuration = 7 * dayDuration
 )
 
 func (s *Schedule) Validate() error {
@@ -34,14 +35,17 @@ func (s *Schedule) Validate() error {
 	return nil // It's all good.
 }
 
-func (s *Schedule) FromYAMLFile(path string) error {
+func FromYAMLFile(path string) (*Schedule, error) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	s.Reset()
-	return yaml.Unmarshal(b, s)
+	s := &Schedule{}
+	if err := yaml.Unmarshal(b, s); err != nil {
+		return nil, err
+	}
+	return s, nil
 }
 
 // Returns the time difference between the next-to-last and last Shifts in this Schedule as an estimation for when the
@@ -56,21 +60,34 @@ func (s *Schedule) EstimateStopTime() (time.Time, error) {
 	}
 
 	lastShift := s.Shifts[len(s.Shifts)-1]
-	lastShiftTime, err := time.Parse(DateFormat, lastShift.StartDate)
-	if err != nil {
-		return time.Time{}, fmt.Errorf("error parsing last shift start date(%v): %v", lastShift.StartDate, err)
-	}
-
 	if len(s.Shifts) == 1 {
-		return lastShiftTime.AddDate(0, 0, defaultStopTimeDurationDays), nil
+		return lastShift.Add(defaultStopTimeDuration)
 	}
 
 	nextToLastShift := s.Shifts[len(s.Shifts)-2]
-	nextToLastShiftTime, err := time.Parse(DateFormat, nextToLastShift.StartDate)
-	if err != nil {
-		return time.Time{}, fmt.Errorf("error parsing next to last shift start date(%v): %v", nextToLastShift.StartDate, err)
+	between, err := lastShift.DurationBetween(nextToLastShift)
+	if err != nil{
+		return time.Time{}, fmt.Errorf("error calculating difference: %v", err)
 	}
 
-	diff := lastShiftTime.Sub(nextToLastShiftTime)
-	return lastShiftTime.Add(diff), nil
+	return lastShift.Add(between)
+}
+
+func (a *Shift) Add(duration time.Duration) (time.Time, error) {
+	aTime, err := time.Parse(DateFormat, a.StartDate)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("error parsing start date: %v", err)
+	}
+	return aTime.Add(duration), nil
+}
+
+func (a *Shift) DurationBetween(b *Shift) (time.Duration, error) {
+	aTime, err1 := time.Parse(DateFormat, a.StartDate)
+	bTime, err2 := time.Parse(DateFormat, b.StartDate)
+
+	if err1 != nil || err2 != nil {
+		return time.Duration(0), fmt.Errorf("Error parsing shift time difference\nerr1: %v\nerr2: %v", err1, err2)
+	}
+
+	return aTime.Sub(bTime), nil
 }

@@ -27,8 +27,7 @@ func TestSchedule(t *testing.T) {
 		t.Fatalf("cannot create new gcal: %v", err)
 	}
 
-	s := &schedule.Schedule{}
-	err = s.FromYAMLFile("testing/test_schedule.yaml")
+	s, err := schedule.FromYAMLFile("testing/test_schedule.yaml")
 	if err != nil {
 		t.Fatalf("cannot read schedule from yaml file: %v", err)
 	}

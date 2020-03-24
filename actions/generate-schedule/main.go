@@ -52,8 +52,8 @@ func main() {
 
 	var newSchedule *schedule.Schedule
 	if *previousSchedulePath != "" {
-		previousSchedule := &schedule.Schedule{}
-		if err := previousSchedule.FromYAMLFile(*previousSchedulePath); err != nil {
+		previousSchedule, err := schedule.FromYAMLFile(*previousSchedulePath)
+		if err != nil {
 			log.Fatalf("Error parsing previous schedule: %v", err)
 		}
 
