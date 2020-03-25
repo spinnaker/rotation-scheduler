@@ -18,6 +18,8 @@ import (
 const (
 	UserAgent  = "github.com/spinnaker/rotation-scheduler"
 	DateFormat = "2006-01-02"
+
+	defaultEndpoint = "https://www.googleapis.com/calendar/v3/"
 )
 
 // GCal wraps the Google Calendar service.
@@ -33,7 +35,12 @@ func NewGCal(calendarID string, client *http.Client) (*GCal, error) {
 		return nil, fmt.Errorf("calendar ID cannot be empty")
 	}
 
-	svc, err := calendar.NewService(context.Background(), option.WithHTTPClient(client), option.WithUserAgent(UserAgent))
+	// We must specify the endpoint here because Google-owned hardware attempts to upgrade to an mTLS connection through
+	// a different URL. This different URL causes unit tests to fail.
+	svc, err := calendar.NewService(context.Background(),
+		option.WithHTTPClient(client),
+		option.WithUserAgent(UserAgent),
+		option.WithEndpoint(defaultEndpoint))
 	if err != nil {
 		return nil, fmt.Errorf("unable to create Calendar service: %v", err)
 	}
@@ -71,8 +78,8 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 	}
 
 	type expandedEvent struct {
-		event *calendar.Event
-		user string
+		event            *calendar.Event
+		user             string
 		inclusiveEndDate string
 	}
 
@@ -111,7 +118,7 @@ func (g *GCal) Schedule(s *schedule.Schedule, stop time.Time) error {
 		}
 		expEvents[i] = &expandedEvent{
 			event: event,
-			user: u,
+			user:  u,
 			// Calendar's end time is exclusive, so this is the inclusive date for printed output.
 			inclusiveEndDate: endDate.Add(-24 * time.Hour).Format(DateFormat),
 		}
