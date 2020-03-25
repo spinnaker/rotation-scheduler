@@ -9,10 +9,28 @@ import (
 
 const (
 	DateFormat              = "Mon 02 Jan 2006"
-	defaultStopTimeDays 	= 7
+	defaultStopTimeDays     = 7
 	dayDuration             = 24 * time.Hour
 	defaultStopTimeDuration = defaultStopTimeDays * dayDuration
 )
+
+func FromYAMLFile(path string) (*Schedule, error) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	s := &Schedule{}
+	if err := yaml.Unmarshal(b, s); err != nil {
+		return nil, err
+	}
+
+	if err := s.Validate(); err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
 
 func (s *Schedule) Validate() error {
 	if s == nil {
@@ -42,19 +60,6 @@ func (s *Schedule) Validate() error {
 	return nil // It's all good.
 }
 
-func FromYAMLFile(path string) (*Schedule, error) {
-	b, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	s := &Schedule{}
-	if err := yaml.Unmarshal(b, s); err != nil {
-		return nil, err
-	}
-	return s, nil
-}
-
 // Returns the time difference between the next-to-last and last Shifts in this Schedule as an estimation for when the
 // last Shift will end. Defaults to 7 when only 1 shift is in the schedule, and throws an error otherwise.
 func (s *Schedule) EstimateStopTime() (time.Time, error) {
@@ -73,7 +78,7 @@ func (s *Schedule) EstimateStopTime() (time.Time, error) {
 
 	nextToLastShift := s.Shifts[len(s.Shifts)-2]
 	between, err := lastShift.DurationBetween(nextToLastShift)
-	if err != nil{
+	if err != nil {
 		return time.Time{}, fmt.Errorf("error calculating difference: %v", err)
 	}
 
