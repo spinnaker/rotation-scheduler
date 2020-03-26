@@ -2,9 +2,10 @@ package scheduler
 
 import (
 	"fmt"
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
-	"github.com/spinnaker/rotation-scheduler/proto/schedule"
 	"time"
+
+	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
+	"github.com/spinnaker/rotation-scheduler/schedule"
 )
 
 const (
@@ -33,70 +34,64 @@ func NewScheduler(userSource users.Source, shiftDurationDays int) (*Scheduler, e
 	}, nil
 }
 
-// Schedule creates a new Schedule from start (inclusive) to stop (exclusive). Will return a 1-entry schedule if
-// stop is before start.
+// Schedule creates a new Schedule that includes whole shifts of `Scheduler.shiftDuration` from start (inclusive) to
+// stop (inclusive).  Will return an error if stop is before start, or either start are stop are zero values.
 func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) {
-	sched := &schedule.Schedule{
-		Shifts: []*schedule.Shift{
-			{
-				StartDate: start.Format(DateFormat),
-				User:      s.userSource.NextUser(),
-			},
-		},
+	if start.IsZero() || stop.IsZero() {
+		return nil, fmt.Errorf("neither start (%v) nor stop (%v) can be zero values", start, stop)
 	}
-	if err := s.ExtendSchedule(sched, stop); err != nil {
-		return nil, err
+
+	if stop.Before(start) {
+		return nil, fmt.Errorf("start cannot be before stop")
 	}
+
+	sched := &schedule.Schedule{}
+	s.extendSchedule(sched, start, stop)
+
+	if err := sched.Validate(); err != nil {
+		return nil, fmt.Errorf("error validating new schedule: %v", err)
+	}
+
 	return sched, nil
 }
 
 // ExtendSchedule takes a previously generated schedule and extends it. The user rotation continues as normal from the
 // last shift in the schedule.
-func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stop time.Time) error {
-	if err := validatePreviousShifts(sched.Shifts); err != nil {
-		return fmt.Errorf("error validating input shifts: %v", err)
+func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.Time) error {
+	if err := sched.Validate(); err != nil {
+		return fmt.Errorf("cannot extend invalid schedule: %v", err)
 	}
 
-	mostRecentShift := sched.Shifts[len(sched.Shifts)-1]
-	if err := s.userSource.StartAfter(mostRecentShift.User); err != nil {
-		return fmt.Errorf("error finding input shift owner (%v) in user source: %v", mostRecentShift.User, err)
+	lastShift := sched.LastShift()
+	if lastShift.StopDateExclusive().After(stopInclusive) {
+		return fmt.Errorf("cannot stop before the last shift of the previous schedule is complete")
 	}
 
-	for start := s.startTime(mostRecentShift); start.Before(stop); start = s.nextShiftTime(start) {
-		sched.Shifts = append(sched.Shifts, &schedule.Shift{
-			User:      s.userSource.NextUser(),
-			StartDate: start.Format(DateFormat),
-		})
+	if err := s.userSource.StartAfter(lastShift.User); err != nil {
+		return fmt.Errorf("error finding input shift owner (%v) in user source: %v", lastShift.User, err)
 	}
 
+	firstNewShiftStart := sched.LastShift().StopDateExclusive()
+	sched.LastShift().ClearStopDate()
+
+	s.extendSchedule(sched, firstNewShiftStart, stopInclusive)
 	return nil
 }
 
-func validatePreviousShifts(previousShifts []*schedule.Shift) error {
-	if previousShifts == nil || len(previousShifts) == 0 {
-		fmt.Printf("No input shifts found. Starting from scratch.")
-		return nil
+func (s *Scheduler) extendSchedule(sched *schedule.Schedule, start, stopInclusive time.Time) {
+	for ; s.wholeShiftCanFit(start, stopInclusive); start = s.nextShiftTime(start) {
+		sched.Shifts = append(sched.Shifts, &schedule.Shift{
+			User:      s.userSource.NextUser(),
+			StartDate: start,
+		})
 	}
-
-	for i, shift := range previousShifts {
-		if _, err := time.Parse(DateFormat, shift.StartDate); err != nil {
-			return fmt.Errorf("error in input shift entry %v, invalid value: %v, err: %v", i, shift.StartDate, err)
-		}
-		if shift.User == "" {
-			return fmt.Errorf("user cannot be empty in input shift entry %v", i)
-		}
-	}
-
-	return nil // It's all good.
+	// The last value of the loop conveniently contains the exclusive stop date.
+	sched.LastShift().SetStopDateExclusive(start)
 }
 
-func (s *Scheduler) startTime(mostRecentShift *schedule.Shift) time.Time {
-	start, err := time.Parse(DateFormat, mostRecentShift.StartDate)
-	if err != nil {
-		return time.Now() // Should never happen with validation.
-	}
-
-	return s.nextShiftTime(start)
+func (s *Scheduler) wholeShiftCanFit(start, stopInclusive time.Time) bool {
+	shiftStopIncl := s.nextShiftTime(start).Add(-24 * time.Hour)
+	return shiftStopIncl.Before(stopInclusive) || shiftStopIncl == stopInclusive
 }
 
 func (s *Scheduler) nextShiftTime(previous time.Time) time.Time {

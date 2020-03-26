@@ -3,21 +3,21 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ghodss/yaml"
 	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/ghodss/yaml"
 	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/scheduler"
 	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
-	"github.com/spinnaker/rotation-scheduler/proto/schedule"
+	"github.com/spinnaker/rotation-scheduler/schedule"
 )
 
 var (
 	// Required flags
-	stop              = flag.String("stop", "", "Stop generating the schedule after this date. Date is exclusive (not included in the schedule), and must be in the format 2006-01-02.")
+	stop              = flag.String("stop", "", "Stop generating the schedule at or before this date. Date is inclusive in the schedule if the final shift ends on this date. Must be in the format 2006-01-02.")
 	shiftDurationDays = flag.Int("shiftDurationDays", 7, "The duration of each shift in days")
 	// TODO(ttomsu): Flag is required now, make optional later (once GH teams integration works).
 	userList = flag.String("users", "", "Comma-separated list of users in the rotation. Usernames will be alphabetically sorted prior to assigning shifts.")
@@ -52,7 +52,7 @@ func main() {
 
 	var newSchedule *schedule.Schedule
 	if *previousSchedulePath != "" {
-		previousSchedule, err := parsePreviousSchedule(*previousSchedulePath)
+		previousSchedule, err := previousSchedule(*previousSchedulePath)
 		if err != nil {
 			log.Fatalf("Error parsing previous schedule: %v", err)
 		}
@@ -119,7 +119,7 @@ func validateFlags() error {
 	return nil
 }
 
-func parsePreviousSchedule(previousSchedulePath string) (*schedule.Schedule, error) {
+func previousSchedule(previousSchedulePath string) (*schedule.Schedule, error) {
 	prevBytes, err := ioutil.ReadFile(previousSchedulePath)
 	if err != nil {
 		return nil, err
@@ -129,5 +129,6 @@ func parsePreviousSchedule(previousSchedulePath string) (*schedule.Schedule, err
 	if err := yaml.Unmarshal(prevBytes, prevSched); err != nil {
 		return nil, err
 	}
+
 	return prevSched, nil
 }

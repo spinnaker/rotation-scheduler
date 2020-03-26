@@ -15,8 +15,6 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Ensure proto library is updated
-      run : ./proto/regen-protos.sh
     - name: Build
       run: go build ./...
     - name: Test

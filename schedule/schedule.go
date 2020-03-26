@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/ghodss/yaml"
 )
 
 const (
@@ -57,6 +59,17 @@ func (sch *Schedule) Validate() error {
 	}
 
 	return nil // It's all good.
+}
+
+func (sch *Schedule) String() string {
+	if sch == nil {
+		return ""
+	}
+	b, err := yaml.Marshal(sch)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }
 
 // A shift represents a span of time someone is on duty.
@@ -162,4 +175,15 @@ func (sh *Shift) UnmarshalJSON(data []byte) error {
 	}
 
 	return nil
+}
+
+func (sh *Shift) String() string {
+	if sh == nil {
+		return ""
+	}
+	b, err := yaml.Marshal(sh)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }
