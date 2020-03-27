@@ -25,13 +25,13 @@ func (sch *Schedule) LastShift() *Shift {
 	return sch.Shifts[len(sch.Shifts)-1]
 }
 
+// Validate confirms all shifts are valid individually and collectively. Returns a nil error if there are no shifts.
 func (sch *Schedule) Validate() error {
 	if sch == nil {
 		return fmt.Errorf("schedule cannot be nil")
 	}
 
 	if sch.Shifts == nil || len(sch.Shifts) == 0 {
-		fmt.Println("No input shifts found. Starting from scratch.")
 		return nil
 	}
 
@@ -41,7 +41,7 @@ func (sch *Schedule) Validate() error {
 			return fmt.Errorf("schedule is invalid because shift %v is invalid: %v", i, err)
 		}
 
-		if !previousStartDate.IsZero() && previousStartDate.After(shift.StartDate) {
+		if !previousStartDate.IsZero() && shift.StartDate.Before(previousStartDate) {
 			return fmt.Errorf("shifts out of order: shift time %v found after %v", previousStartDate, shift.StartDate)
 		}
 		previousStartDate = shift.StartDate
