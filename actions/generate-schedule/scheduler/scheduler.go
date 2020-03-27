@@ -46,10 +46,8 @@ func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) 
 	}
 
 	sched := &schedule.Schedule{}
-	s.extendSchedule(sched, start, stop)
-
-	if err := sched.Validate(); err != nil {
-		return nil, fmt.Errorf("error validating new schedule: %v", err)
+	if err := s.extendSchedule(sched, start, stop); err != nil {
+		return nil, fmt.Errorf("error extending schedule: %v", err)
 	}
 
 	return sched, nil
@@ -74,19 +72,30 @@ func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.
 	firstNewShiftStart := sched.LastShift().StopDateExclusive()
 	sched.LastShift().ClearStopDate()
 
-	s.extendSchedule(sched, firstNewShiftStart, stopInclusive)
-	return nil
+	return s.extendSchedule(sched, firstNewShiftStart, stopInclusive)
 }
 
-func (s *Scheduler) extendSchedule(sched *schedule.Schedule, start, stopInclusive time.Time) {
+func (s *Scheduler) extendSchedule(sched *schedule.Schedule, start, stopInclusive time.Time) error {
 	for ; s.wholeShiftCanFit(start, stopInclusive); start = s.nextShiftTime(start) {
 		sched.Shifts = append(sched.Shifts, &schedule.Shift{
 			User:      s.userSource.NextUser(),
 			StartDate: start,
 		})
 	}
+
+	if sched.LastShift() == nil {
+		return fmt.Errorf("no whole shifts of duration %v days can fit between %v and %v",
+			s.shiftDurationDays,
+			start.Format(DateFormat),
+			stopInclusive.Format(DateFormat))
+	}
 	// The last value of the loop conveniently contains the exclusive stop date.
 	sched.LastShift().SetStopDateExclusive(start)
+
+	if err := sched.Validate(); err != nil {
+		return fmt.Errorf("error validating new schedule: %v", err)
+	}
+	return nil
 }
 
 func (s *Scheduler) wholeShiftCanFit(start, stopInclusive time.Time) bool {

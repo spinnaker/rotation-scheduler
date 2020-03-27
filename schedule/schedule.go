@@ -31,7 +31,7 @@ func (sch *Schedule) Validate() error {
 		return fmt.Errorf("schedule cannot be nil")
 	}
 
-	if sch.Shifts == nil || len(sch.Shifts) == 0 {
+	if sch.LastShift() == nil {
 		return nil
 	}
 

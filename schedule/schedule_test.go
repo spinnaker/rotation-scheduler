@@ -26,9 +26,8 @@ func TestScheduleValidate(t *testing.T) {
 		{
 			desc: "empty shifts",
 			schedule: &Schedule{
-				Shifts: make([]*Shift, 1),
+				Shifts: []*Shift{},
 			},
-			wantErr: true,
 		},
 		{
 			desc: "invalid shift",

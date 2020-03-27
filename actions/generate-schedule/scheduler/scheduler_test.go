@@ -20,22 +20,41 @@ func TestNewScheduler(t *testing.T) {
 }
 
 func TestSchedule(t *testing.T) {
-	s, err := NewScheduler(users.NewStaticSource("first", "second", "third"), 1)
-	if err != nil {
-		t.Fatalf("error creating scheduler: %v", err)
-	}
-
 	for _, tc := range []struct {
-		desc    string
-		start   time.Time
-		stop    time.Time
-		wantErr bool
-		want    *schedule.Schedule
+		desc          string
+		shiftDuration int
+		start         time.Time
+		stop          time.Time
+		wantErr       bool
+		want          *schedule.Schedule
 	}{
 		{
-			desc:  "happy path",
-			start: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-			stop:  time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
+			desc:          "same day start and stop",
+			shiftDuration: 1,
+			start:         time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			stop:          time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			want: &schedule.Schedule{
+				Shifts: []*schedule.Shift{
+					{
+						StartDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+						StopDate:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+						User:      "first",
+					},
+				},
+			},
+		},
+		{
+			desc:          "same day start and stop, longer shift duration",
+			shiftDuration: 7,
+			start:         time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			stop:          time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			wantErr:       true,
+		},
+		{
+			desc:          "happy path",
+			shiftDuration: 1,
+			start:         time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			stop:          time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
 			want: &schedule.Schedule{
 				Shifts: []*schedule.Shift{
 					{
@@ -50,28 +69,41 @@ func TestSchedule(t *testing.T) {
 						StartDate: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC),
 						User:      "third",
 					},
+					{
+						StartDate: time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
+						StopDate:  time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
+						User:      "first",
+					},
 				},
 			},
 		},
 		{
-			desc:    "start after stop",
-			start:   time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
-			stop:    time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-			wantErr: true,
+			desc:          "start after stop",
+			shiftDuration: 1,
+			start:         time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
+			stop:          time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			wantErr:       true,
 		},
 		{
-			desc:    "zero start",
-			start:   time.Time{},
-			stop:    time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-			wantErr: true,
+			desc:          "zero start",
+			shiftDuration: 1,
+			start:         time.Time{},
+			stop:          time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			wantErr:       true,
 		}, {
-			desc:    "zero stop",
-			start:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-			stop:    time.Time{},
-			wantErr: true,
+			desc:          "zero stop",
+			shiftDuration: 1,
+			start:         time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			stop:          time.Time{},
+			wantErr:       true,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			s, err := NewScheduler(users.NewStaticSource("first", "second", "third"), tc.shiftDuration)
+			if err != nil {
+				t.Fatalf("error creating scheduler: %v", err)
+			}
+
 			got, err := s.Schedule(tc.start, tc.stop)
 			if tc.wantErr && err == nil {
 				t.Errorf("err expected and not received.")
@@ -84,7 +116,7 @@ func TestSchedule(t *testing.T) {
 				return
 			}
 
-			if reflect.DeepEqual(tc.want, got) {
+			if !reflect.DeepEqual(tc.want, got) {
 				t.Errorf("got schedule different from expected.\nWant:\n%v\n\nGot:\n%v\n", tc.want, got)
 			}
 		})
