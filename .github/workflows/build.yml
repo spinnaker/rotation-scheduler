@@ -4,6 +4,8 @@ on: [ push ]
 
 jobs:
   branch-build:
+    # Only run this on repositories in the 'spinnaker' org, not on forks.
+    if: startsWith(github.repository, 'spinnaker/')
     strategy:
       matrix:
         go-version: [1.14.x]
