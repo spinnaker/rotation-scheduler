@@ -1,0 +1,131 @@
+{
+  "Initial": "",
+  "Version": "0.2",
+  "Converter": {
+    "ClearHeaders": [
+      "^X-Goog-.*Encryption-Key$"
+    ],
+    "RemoveRequestHeaders": [
+      "^Authorization$",
+      "^Proxy-Authorization$",
+      "^Connection$",
+      "^Content-Type$",
+      "^Date$",
+      "^Host$",
+      "^Transfer-Encoding$",
+      "^Via$",
+      "^X-Forwarded-.*$",
+      "^X-Cloud-Trace-Context$",
+      "^X-Goog-Api-Client$",
+      "^X-Google-.*$",
+      "^X-Gfe-.*$"
+    ],
+    "RemoveResponseHeaders": [
+      "^X-Google-.*$",
+      "^X-Gfe-.*$"
+    ],
+    "ClearParams": null,
+    "RemoveParams": null
+  },
+  "Entries": [
+    {
+      "ID": "ae2dae3291ba8f46",
+      "Request": {
+        "Method": "GET",
+        "URL": "https://api.github.com/orgs/spinnaker/teams/build-cops/members",
+        "Header": {
+          "Accept": [
+            "application/vnd.github.v3+json"
+          ],
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "User-Agent": [
+            "go-github"
+          ]
+        },
+        "MediaType": "",
+        "BodyParts": null
+      },
+      "Response": {
+        "StatusCode": 200,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Access-Control-Allow-Origin": [
+            "*"
+          ],
+          "Access-Control-Expose-Headers": [
+            "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset"
+          ],
+          "Cache-Control": [
+            "private, max-age=60, s-maxage=60"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Security-Policy": [
+            "default-src 'none'"
+          ],
+          "Content-Type": [
+            "application/json; charset=utf-8"
+          ],
+          "Date": [
+            "Mon, 30 Mar 2020 15:41:04 GMT"
+          ],
+          "Etag": [
+            "W/\"6390efefc140dfa9f2720ec28ba12c5f\""
+          ],
+          "Referrer-Policy": [
+            "origin-when-cross-origin, strict-origin-when-cross-origin"
+          ],
+          "Server": [
+            "GitHub.com"
+          ],
+          "Status": [
+            "200 OK"
+          ],
+          "Strict-Transport-Security": [
+            "max-age=31536000; includeSubdomains; preload"
+          ],
+          "Vary": [
+            "Accept, Authorization, Cookie, X-GitHub-OTP",
+            "Accept-Encoding, Accept, X-Requested-With"
+          ],
+          "X-Accepted-Oauth-Scopes": [
+            "admin:org, read:org, repo, user, write:org"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "deny"
+          ],
+          "X-Github-Media-Type": [
+            "github.v3; format=json"
+          ],
+          "X-Github-Request-Id": [
+            "8FDE:0850:A5894:22D3F3:5E82130F"
+          ],
+          "X-Oauth-Scopes": [
+            "read:org"
+          ],
+          "X-Ratelimit-Limit": [
+            "5000"
+          ],
+          "X-Ratelimit-Remaining": [
+            "4999"
+          ],
+          "X-Ratelimit-Reset": [
+            "1585586464"
+          ],
+          "X-Xss-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "Body": "H4sIAAAAAAAAA63aT2+jOBgG8O+Sw55GExv/ASpVo5XaQw80qpRZ7Wi0qmxjKFUSIkLSaap+9zXBOIEmRMacWkV+Hl7S/GQg/f0xWeRptprcTIqc7zO5kkU5+TbJ4skNBIGP4bfJKo/lc/XCJLp7ov/8+7gQr/dvszsBoqfbW7WY7VjJiudtsVBrXspyvbmZTusXN973NCtftny7kYXIV6Vcld9Fvpxup3X9j+2tBMRLAkol5iEnCUfUk4gkFMXCl4LAQPgCCxH+tbvF6mhpoY93GEm90DnuOtOHrI+jjruZts7tpVwuOsPWMx4CraVJvljkb6qhe3L9B5manBqv/j1bpYM6VO5jmpcvUr2/6lQ+qzcg25S2Ax0yH9Pqh/pTVi0b9ScrZGw5lE6pkd7UJ+XzY1rIdX6o2/KNKLJ1meUr2+FaWdWVFylbZXs2pEtlN6qiGst2jENGZeVOfUhtw3XoY7oush0T79VbUkghs516iwcVdtKqr3xfS/WJ/6k+BtUbnpXymcXLym7CFhv5+e1oWSSZ5IdlFRIEoBd65yFHb9H8gUTpVcjgIuS6XkH2uc98LkkAfA/HAiHpMSJDEQuKgcQBEUnoCcocIB9PrF/xcZ0VYR0b7rdd4IK3aXKS25SMx9Y0nnofYrYpsgXb5Oy1NslxqB7naCm3c7pebJfr94YpCT1KLjCFs/mD93h9v+1heqj/MXwTNcP20zPLrOTVqeHwWnkXd7rIiZ3uGE9dU+iKTvfYmtMxe3I6OI44M4UDOPaaF7FcVdv8YWcMAkou7Yx4dvcLuu2Mh3oHcifj9qM7WWjFrskNh9dpcKFnqpzwmZbx+B0rXQGaJluCJmiP0ETHYXgyiQNEuc+WbPWeaYgQhTAMLki838/m92R293DtZvPy5qf71UUqTHzOMfAJjzmhCYl9yjkXzJNEephIxCHkYeJyt3lybv1qTxZaqW1yw9V2GlzUmiontaZlPLXHSle1pslWrQnaqzXRcdSeTOKg9lXd3GdSm/UoomGIzl+wPnjR/heZzaPhZnW/w/Zpxu1naJZZIaxTwwm28i4AdZETP90xHr6m0JWe7rGFp2P27HRwHHRmCgdysnxhq6TIU/UUsrlqRR6GEJyHF+2j16c/0fzva/DQ5Qc6db/aLDkIIZYBwBKEjHIpGY9DmcQg5AlOhOfJUG2lvssTnc759UvtLLbyepodrvZMi4vdVp2T4FbTeI7bta6aW222plthe9mt+Di+OxM5KI+3SbkwD2wDjHwfBueBpyDaCxTN02vAL18N634FHAHGcEJBqIjHNAEBlIAHiAUMUkETRoi6JKYhcHhkezy1ftvHdVasdWy46HaBC+amyclxUzIeYdPoqrcpsoXb5OzNNslxuB7ncJBalvlyszW3rRBDQi5sxff7aP7053H+800t7/uSFF7ciiGqD1B9uwKwiDGUnKobV59SBBPJEQF+EHtKaYBBiHGccAeq5tz6pZplVlDr1HCnrbwLU13kpFR3jIe0KXQ1qntsieqYvVAdHAeomcLB55KlafVvDKUsdmzROCWh+q8CPzy/o96rL1ciL3oV5IrTyzsq1AdQTonnJySIEUeI8kB9+cljBAAPWez7gbqYFkQIdclMHZx+Ocd+r1+WW7ltp4f7Pdvj4rhT6OS50zWe626xq+9On63zTtzee6dgHPdfprL1/9//sUBtZ8gkAAA="
+      }
+    }
+  ]
+}
