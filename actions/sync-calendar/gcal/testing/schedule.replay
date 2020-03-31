@@ -1,0 +1,379 @@
+{
+  "Initial": "",
+  "Version": "0.2",
+  "Converter": {
+    "ClearHeaders": [
+      "^X-Goog-.*Encryption-Key$"
+    ],
+    "RemoveRequestHeaders": [
+      "^Authorization$",
+      "^Proxy-Authorization$",
+      "^Connection$",
+      "^Content-Type$",
+      "^Date$",
+      "^Host$",
+      "^Transfer-Encoding$",
+      "^Via$",
+      "^X-Forwarded-.*$",
+      "^X-Cloud-Trace-Context$",
+      "^X-Goog-Api-Client$",
+      "^X-Google-.*$",
+      "^X-Gfe-.*$"
+    ],
+    "RemoveResponseHeaders": [
+      "^X-Google-.*$",
+      "^X-Gfe-.*$"
+    ],
+    "ClearParams": null,
+    "RemoveParams": null
+  },
+  "Entries": [
+    {
+      "ID": "3a421c12f524fc4f",
+      "Request": {
+        "Method": "POST",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/clear?alt=json\u0026prettyPrint=false",
+        "Header": {
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "0"
+          ],
+          "User-Agent": [
+            "google-api-go-client/0.5"
+          ]
+        },
+        "MediaType": "",
+        "BodyParts": null
+      },
+      "Response": {
+        "StatusCode": 204,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000"
+          ],
+          "Cache-Control": [
+            "no-cache, no-store, max-age=0, must-revalidate"
+          ],
+          "Date": [
+            "Tue, 31 Mar 2020 16:41:49 GMT"
+          ],
+          "Expires": [
+            "Mon, 01 Jan 1990 00:00:00 GMT"
+          ],
+          "Pragma": [
+            "no-cache"
+          ],
+          "Server": [
+            "GSE"
+          ],
+          "Vary": [
+            "Origin",
+            "X-Origin"
+          ]
+        },
+        "Body": ""
+      }
+    },
+    {
+      "ID": "d50ec4d3db1f3fea",
+      "Request": {
+        "Method": "POST",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "Header": {
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "100"
+          ],
+          "User-Agent": [
+            "google-api-go-client/0.5"
+          ]
+        },
+        "MediaType": "application/json",
+        "BodyParts": [
+          "eyJlbmQiOnsiZGF0ZSI6IjIwMjAtMDYtMDgifSwic3RhcnQiOnsiZGF0ZSI6IjIwMjAtMDYtMDEifSwic3VtbWFyeSI6ImFiYyBTcGlubmFrZXIgT1NTIEJ1aWxkIENvcCJ9Cg=="
+        ]
+      },
+      "Response": {
+        "StatusCode": 200,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000"
+          ],
+          "Cache-Control": [
+            "no-cache, no-store, max-age=0, must-revalidate"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Security-Policy": [
+            "frame-ancestors 'self'"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Tue, 31 Mar 2020 16:41:49 GMT"
+          ],
+          "Etag": [
+            "\"3171345818964000\""
+          ],
+          "Expires": [
+            "Mon, 01 Jan 1990 00:00:00 GMT"
+          ],
+          "Pragma": [
+            "no-cache"
+          ],
+          "Server": [
+            "GSE"
+          ],
+          "Vary": [
+            "Origin",
+            "X-Origin"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-Xss-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "Body": "H4sIAAAAAAAAAJVS2W7bMBD8FYN99UEdcWQBRQInaZCiaIE6R6OmD5S4lhnxUHnYiA3/e5YGnD4UCJDXnRnOzix3pBOak5I0TILmzH6CNWhPhgQ8a3H+RLLkNMnykyIpZtOcUvpEEBVR0+U9NNAlKaPs+VTpbtYKz6GuDTKcZz64+LLRS2EVcByuvJLfhO5wvPK+d+Vkstlsxq0xrYRxY9TkuMfksMcZCP6ZbX9uqofvkm2vXh5v5yv2zH2t3EmVSlpd34tHVbRNNu9r9XXNr+bb5lqGWn2x1a+bwB4KtG0sMA9x5ZSmdESzUZbcJtMyT8p8NsZMFZJCz98h5UUaSS4oxewLkljdDBa90Jp1YAc/FovBPAjJBxemPzoaS8odAcWERIFDcm38uTuKxuLQE8glKb0NsB8SY1umxRY+LMS2rY+imOEtwnREE4IoxBP/jxURExdM3t1cvnvO838HOhj/DaAbfIoOiQWFHwisiwbBwSUsWZC4ypJJB5hoDdYKDoj/3hEFfmVixb3pQ+wJxcFHMKH7P/v9KykAWqSPAgAA"
+      }
+    },
+    {
+      "ID": "19f84d62facf74af",
+      "Request": {
+        "Method": "POST",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "Header": {
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "100"
+          ],
+          "User-Agent": [
+            "google-api-go-client/0.5"
+          ]
+        },
+        "MediaType": "application/json",
+        "BodyParts": [
+          "eyJlbmQiOnsiZGF0ZSI6IjIwMjAtMDYtMTUifSwic3RhcnQiOnsiZGF0ZSI6IjIwMjAtMDYtMDgifSwic3VtbWFyeSI6ImxtbiBTcGlubmFrZXIgT1NTIEJ1aWxkIENvcCJ9Cg=="
+        ]
+      },
+      "Response": {
+        "StatusCode": 200,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000"
+          ],
+          "Cache-Control": [
+            "no-cache, no-store, max-age=0, must-revalidate"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Security-Policy": [
+            "frame-ancestors 'self'"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Tue, 31 Mar 2020 16:41:50 GMT"
+          ],
+          "Etag": [
+            "\"3171345819608000\""
+          ],
+          "Expires": [
+            "Mon, 01 Jan 1990 00:00:00 GMT"
+          ],
+          "Pragma": [
+            "no-cache"
+          ],
+          "Server": [
+            "GSE"
+          ],
+          "Vary": [
+            "Origin",
+            "X-Origin"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-Xss-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "Body": "H4sIAAAAAAAAAJVSXW8TMRD8K5F5zYedu6buSYgqDYQiqkgEVBrKg++8uZj4C5+dlET576wrBR6QKvG6M7Ozs7tHslVWkoo0QoOVIryCHdhI+gSiaLH+SAp2yYrygrOrCeWU0keCqMoaaTh3lz62zvhaS/HD6KJ0tuANMrooYupyZ2fXKhiQWNxEoz8qu8XyJkbfVaPRfr8fts61GoaNM6PzHKPnOd6Akq9Xc1ou5rxo3n+y9ZjtH8zT9uHex3p2R+txeVjM79qmmPrafNjJt9NDM9epNu/C6uttEvccbZsAIkIeeUzHdECLQcE+s0lVsqq8GmKmFZKSly+QOC0zqUvGiPALSdrY3tIra8UWQm+xXPamSWnZu3H+7OgCqY4EjFAaBR2Saxevu7NoqFzuCHpNqhgSnPrEhVZYdYD/FuK2Q8yinOFPhMmAcoIo5BP/g7GLjKkbob/czl485/XfAz0b/0xgG2xF+ySAwQeC0GWD1MEM1iJpHGUtdAeYaAchKAmIfzsSA3Hj8oq98ynvCcUpZpDR0/fT6TcNqIMHjwIAAA=="
+      }
+    },
+    {
+      "ID": "18f40b6e2559b2a4",
+      "Request": {
+        "Method": "POST",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "Header": {
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "100"
+          ],
+          "User-Agent": [
+            "google-api-go-client/0.5"
+          ]
+        },
+        "MediaType": "application/json",
+        "BodyParts": [
+          "eyJlbmQiOnsiZGF0ZSI6IjIwMjAtMDYtMjIifSwic3RhcnQiOnsiZGF0ZSI6IjIwMjAtMDYtMTUifSwic3VtbWFyeSI6ImFiYyBTcGlubmFrZXIgT1NTIEJ1aWxkIENvcCJ9Cg=="
+        ]
+      },
+      "Response": {
+        "StatusCode": 200,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000"
+          ],
+          "Cache-Control": [
+            "no-cache, no-store, max-age=0, must-revalidate"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Security-Policy": [
+            "frame-ancestors 'self'"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Tue, 31 Mar 2020 16:41:50 GMT"
+          ],
+          "Etag": [
+            "\"3171345820448000\""
+          ],
+          "Expires": [
+            "Mon, 01 Jan 1990 00:00:00 GMT"
+          ],
+          "Pragma": [
+            "no-cache"
+          ],
+          "Server": [
+            "GSE"
+          ],
+          "Vary": [
+            "Origin",
+            "X-Origin"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-Xss-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "Body": "H4sIAAAAAAAAAJVSy27bMBD8FYO9+kG9EkNA0UBxm7po04Mb2HDTA02uZFqkSPNhJTH87yUNODkUCNDrzszOzu4eUcs7hkpEiYCOEfMBDtA5NETgSBPqjyhLrpMsL6YpzvMpxvgRBZRHTbqrYZcWel/46QFTd623Bu85Y21gWEect7Gz6mpuJLBQ3DopvvOuDeWtc9qWk0nf9+NGqUbAmCo5ucwxOc/xCTj7+ENquV6q5/tV9XS/esjZrtqxGevJ13lPl6Jd39mGZpXeyG8H9rl6oXfCb+QXs17NPVlOgy01QBycR8YpHuFslCW/kqsyT8oCj0OmdSB5zd4hpWkeSdZLScxzIJENHSw07zrSghn8XCwGleeCDW6Vvjgqg8ojAkm4CAIbyBvlbuxFNOYqdgRRo9IZD6chUqYhHX+B/xaGbRsXRTHDa4SrUVKggEI88T9YmkaM3xLxMJ+9e86btwOdjfceOhpa4SEyIMMDgbHRwFuYQU28CKPURFgIiQ5gDGcQ8N9HJMFtVVyxVtrHPQWxdxFM8OnP6fQXAKUGc48CAAA="
+      }
+    },
+    {
+      "ID": "6facdf30d0c30484",
+      "Request": {
+        "Method": "POST",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "Header": {
+          "Accept-Encoding": [
+            "gzip"
+          ],
+          "Content-Length": [
+            "100"
+          ],
+          "User-Agent": [
+            "google-api-go-client/0.5"
+          ]
+        },
+        "MediaType": "application/json",
+        "BodyParts": [
+          "eyJlbmQiOnsiZGF0ZSI6IjIwMjAtMDYtMjkifSwic3RhcnQiOnsiZGF0ZSI6IjIwMjAtMDYtMjIifSwic3VtbWFyeSI6ImFiYyBTcGlubmFrZXIgT1NTIEJ1aWxkIENvcCJ9Cg=="
+        ]
+      },
+      "Response": {
+        "StatusCode": 200,
+        "Proto": "HTTP/1.1",
+        "ProtoMajor": 1,
+        "ProtoMinor": 1,
+        "Header": {
+          "Alt-Svc": [
+            "quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000"
+          ],
+          "Cache-Control": [
+            "no-cache, no-store, max-age=0, must-revalidate"
+          ],
+          "Content-Encoding": [
+            "gzip"
+          ],
+          "Content-Security-Policy": [
+            "frame-ancestors 'self'"
+          ],
+          "Content-Type": [
+            "application/json; charset=UTF-8"
+          ],
+          "Date": [
+            "Tue, 31 Mar 2020 16:41:50 GMT"
+          ],
+          "Etag": [
+            "\"3171345821336000\""
+          ],
+          "Expires": [
+            "Mon, 01 Jan 1990 00:00:00 GMT"
+          ],
+          "Pragma": [
+            "no-cache"
+          ],
+          "Server": [
+            "GSE"
+          ],
+          "Vary": [
+            "Origin",
+            "X-Origin"
+          ],
+          "X-Content-Type-Options": [
+            "nosniff"
+          ],
+          "X-Frame-Options": [
+            "SAMEORIGIN"
+          ],
+          "X-Xss-Protection": [
+            "1; mode=block"
+          ]
+        },
+        "Body": "H4sIAAAAAAAAAJVS227aQBD9FbR95bJrg3EsRYkIpUrVkgfa0ND0YW0PZuu9uHsBNYh/72wkkodKkfI655w5c2bmSFqha1KQikvQNbcfYA/akz4BzxusP5KUTVk6nuQJS9OMUvpIEBVRk00kqEnbeM5bybQ20wsznob9tEKG89wHFzsbvRVWQY3FnVfyi9Atlnfed64YjQ6Hw7AxppEwrIwanecYPc9xBaK+XP6+d5s1ZTyp6cN6Ycv5IpQqT+/WOV2m98ky+dpU6awr1ed9/XH2VH2SiC/s5sdt4OscbSsL3EMcOaEJHdB0kLJvLCvGrJjQIWbaICl09RukLMsjyQWluP2LJF5WvVUntOYt2N7datWbBSHr3o3pzo7GkuJIQHEhUeCQXBp/7c6ioTCxI8gtKbwNcOoTYxuuxRO8W4jbtj6KYoaXCNkgSQiiEE/8P3YRMXHD5ffb+ZvnvH490LPxnwC6wla0TywofCCwLhoEB3PY8iBxlC2XDjDRHqwVNSD+80gU+J2JK+5MF+KeUBx8BBk9/Tqd/gH86459jwIAAA=="
+      }
+    }
+  ]
+}

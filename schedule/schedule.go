@@ -87,6 +87,14 @@ type Shift struct {
 	StopDate time.Time `json:"stopDate,omitempty"`
 }
 
+// StartDateExclusive returns the date before the start date, which is the StopDateInclusive of the previous shift.
+func (sh *Shift) StartDateExclusive() time.Time {
+	if sh.StartDate.IsZero() {
+		return sh.StartDate // zero value is both inclusive and exclusive.
+	}
+	return sh.StartDate.Add(-24 * time.Hour)
+}
+
 // StopDateExclusive is used when an API uses (start, stop) date ranges as (inclusive, exclusive). May returns a zero
 // `time.Time` when stop is not set.
 func (sh *Shift) StopDateExclusive() time.Time {
