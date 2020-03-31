@@ -1,36 +1,52 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"time"
 
+	"cloud.google.com/go/httpreplay"
 	"github.com/ghodss/yaml"
 	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/scheduler"
 	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
+	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users/ghteams"
 	"github.com/spinnaker/rotation-scheduler/schedule"
+	"golang.org/x/oauth2"
+	"google.golang.org/api/option"
 )
 
 var (
-	// Required flags
-	stop              = flag.String("stop", "", "Stop generating the schedule at or before this date. Date is inclusive in the schedule if the final shift ends on this date. Must be in the format 2006-01-02.")
-	shiftDurationDays = flag.Int("shiftDurationDays", 7, "The duration of each shift in days")
-	// TODO(ttomsu): Flag is required now, make optional later (once GH teams integration works).
-	userList = flag.String("users", "", "Comma-separated list of users in the rotation. Usernames will be alphabetically sorted prior to assigning shifts.")
+	// Required.
+	stop = flag.String("stop", "", "Required. Stop generating the schedule at or before this date. Date is inclusive in the schedule if the final shift ends on this date. Must be in the format 2006-01-02.")
 
+	// Either --users or (--githubTeam and --githubOrg) are requried.
+	userList   = flag.String("users", "", "Comma-separated list of users in the rotation. Usernames will be alphabetically sorted prior to assigning shifts.")
+	githubTeam = flag.String("githubTeam", "", "Fetch the user list from the specified GitHub team. Must specify an access token with read:org permissions in the GITHUB_TOKEN env variable, as well as --githubTeam.")
+	githubOrg  = flag.String("githubOrg", "", "GitHub org that owns the --githubTeam. Must specify with --githubTeam.")
+
+	// Optional
+	shiftDurationDays    = flag.Int("shiftDurationDays", 7, "The duration of each shift in days")
 	start                = flag.String("start", "", "Start generating from this date. If this flag and previousSchedule are not specified, starts from tomorrow's date.")
-	previousSchedulePath = flag.String("previousSchedule", "", "Path to a previous schedule's YAML file.")
+	previousSchedulePath = flag.String("previousSchedule", "", "Path to a previous schedule's YAML file. Extends this schedule until --stop.")
+	schedOutFilepath     = flag.String("scheduleOutput", "", "File to write out new schedule. Will overwrite the file if it exists. If not specified, writes to stdout.")
+	record               = flag.Bool("record", false, "Record the responses from external dependencies to a file. Used for external dependency testing.")
+	recordOutPath        = flag.String("recordOutput", "", "Filepath for saved HTTP responses.")
 
-	outFilepath = flag.String("out", "", "File to write out new schedule. Will overwrite the file if it exists. If not specified, writes to stdout.")
+	// Used to store GitHub personal access token from environment.
+	accessToken string
 )
 
 const (
-	startStopFormat = "2006-01-02"
-	usersSeparator  = ","
+	startStopFormat   = "2006-01-02"
+	usersSeparator    = ","
+	githubTokenEnvKey = "GITHUB_TOKEN"
 )
 
 func main() {
@@ -40,10 +56,17 @@ func main() {
 		log.Fatalf("Error validating flags: %v", err)
 	}
 
-	userSlice := strings.Split(*userList, usersSeparator)
-	userSource := users.NewStaticSource(userSlice...)
+	usersSource, closer, err := usersSource()
+	if err != nil {
+		log.Fatalf("error creating users source: %v", err)
+	}
+	defer func() {
+		if closer != nil {
+			_ = closer.Close()
+		}
+	}()
 
-	sched, err := scheduler.NewScheduler(userSource, *shiftDurationDays)
+	sched, err := scheduler.NewScheduler(usersSource, *shiftDurationDays)
 	if err != nil {
 		log.Fatalf("Error creating scheduler: %v", err)
 	}
@@ -81,12 +104,44 @@ func main() {
 	}
 
 	destFilepath := os.Stdout.Name()
-	if *outFilepath != "" {
-		destFilepath = *outFilepath
+	if *schedOutFilepath != "" {
+		destFilepath = *schedOutFilepath
 	}
 	if err := ioutil.WriteFile(destFilepath, scheduleBytes, 0666); err != nil {
 		log.Fatalf("Error writing out new schedule: %v", err)
 	}
+}
+
+func usersSource() (users.Source, io.Closer, error) {
+	if *userList != "" {
+		userSlice := strings.Split(*userList, usersSeparator)
+		return users.NewStaticSource(userSlice...), nil, nil
+	}
+
+	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: accessToken})
+
+	var client *http.Client
+	var closer io.Closer
+	if *record {
+		r, err := httpreplay.NewRecorder(*recordOutPath, []byte{})
+		if err != nil {
+			return nil, nil, fmt.Errorf("error setting up recorder: %v", err)
+		}
+
+		client, err = r.Client(context.Background(), option.WithTokenSource(ts))
+		if err != nil {
+			return nil, nil, fmt.Errorf("error creating HTTP client: %v", err)
+		}
+	} else {
+		client = oauth2.NewClient(context.Background(), ts)
+	}
+
+	src, err := ghteams.NewGitHubTeamsUserSource(client, *githubOrg, *githubTeam)
+	if err != nil {
+		return nil, nil, fmt.Errorf("could not get users from GitHub: %v", err)
+	}
+
+	return src, closer, nil
 }
 
 func validateFlags() error {
@@ -112,8 +167,20 @@ func validateFlags() error {
 		}
 	}
 
-	if *userList == "" {
-		return fmt.Errorf("--users must be specified")
+	if *githubTeam != "" || *githubOrg != "" {
+		if *githubTeam == "" || *githubOrg == "" {
+			return fmt.Errorf("must specify both --githubTeam and --githubOrg")
+		} else if *userList != "" {
+			return fmt.Errorf("cannot specify both --users and --github* options")
+		}
+
+		var ok bool
+		accessToken, ok = os.LookupEnv(githubTokenEnvKey)
+		if !ok || accessToken == "" {
+			log.Fatalf("GITHUB_TOKEN environment variable cannot be empty. Get one from https://github.com/settings/tokens, and ensure it has the 'read:org' scope.")
+		}
+	} else if *userList == "" {
+		log.Fatalf("must specify either non-empty --users or (--githubTeam and --githubOrg).")
 	}
 
 	return nil
