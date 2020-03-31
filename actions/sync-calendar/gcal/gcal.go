@@ -69,19 +69,39 @@ func Client(calendarID, jsonCredentialsPath string) (*http.Client, error) {
 	return jwtConfig.Client(context.Background()), nil
 }
 
-// Clears all events on the calendar and replaces them with events from Schedule S.
+// Clears all events on the calendar and replaces them with events from Schedule sched.
 func (g *GCal) Schedule(sched *schedule.Schedule) error {
 	if err := sched.Validate(); err != nil {
 		return fmt.Errorf("schedule is invalid: %v", err)
 	}
 
-	type scheduledEvent struct {
-		event        *calendar.Event
-		user         string
-		stopDateIncl time.Time
+	internalEvents := internalEvents(sched)
+
+	// Clear all events from the calendar
+	if err := g.svc.Calendars.Clear(g.CalendarID).Do(); err != nil {
+		return fmt.Errorf("error clearing calendar: %v", err)
 	}
 
-	expEvents := make([]*scheduledEvent, len(sched.Shifts))
+	for i, ie := range internalEvents {
+		_, err := g.svc.Events.Insert(g.CalendarID, ie.GcalEvent).SendUpdates("none").Do()
+		if err != nil {
+			return fmt.Errorf("insert error with event at index %v: %v\nEvent value:\n%+v", i, err, ie.GcalEvent)
+		} else {
+			log.Printf("Added shift for %v from %v to %v", ie.User, ie.GcalEvent.Start.Date, ie.StopDateIncl)
+		}
+	}
+
+	return nil
+}
+
+type internalEvent struct {
+	GcalEvent    *calendar.Event
+	User         string
+	StopDateIncl time.Time
+}
+
+func internalEvents(sched *schedule.Schedule) []*internalEvent {
+	intEvents := make([]*internalEvent, len(sched.Shifts))
 	for i, shift := range sched.Shifts {
 		var stopDateIncl, stopDateExcl time.Time
 		if shift == sched.LastShift() {
@@ -98,7 +118,7 @@ func (g *GCal) Schedule(sched *schedule.Schedule) error {
 			u = shift.UserOverride
 		}
 		event := &calendar.Event{
-			Summary: fmt.Sprintf("%v Spinnaker OSS Build Cop", u),
+			Summary: eventSummary(u),
 			Start: &calendar.EventDateTime{
 				Date: shift.StartDate.Format(DateFormat), // Start.Date is inclusive.
 			},
@@ -106,26 +126,16 @@ func (g *GCal) Schedule(sched *schedule.Schedule) error {
 				Date: stopDateExcl.Format(DateFormat), // End.Date is exclusive
 			},
 		}
-		expEvents[i] = &scheduledEvent{
-			event:        event,
-			user:         u,
-			stopDateIncl: stopDateIncl,
+		intEvents[i] = &internalEvent{
+			GcalEvent:    event,
+			User:         u,
+			StopDateIncl: stopDateIncl,
 		}
 	}
 
-	// Clear all events from the calendar
-	if err := g.svc.Calendars.Clear(g.CalendarID).Do(); err != nil {
-		return fmt.Errorf("error clearing calendar: %v", err)
-	}
+	return intEvents
+}
 
-	for i, ee := range expEvents {
-		_, err := g.svc.Events.Insert(g.CalendarID, ee.event).SendUpdates("none").Do()
-		if err != nil {
-			return fmt.Errorf("insert error with event at index %v: %v\nEvent value:\n%+v", i, err, ee.event)
-		} else {
-			log.Printf("Added shift for %v from %v to %v", ee.user, ee.event.Start.Date, ee.stopDateIncl)
-		}
-	}
-
-	return nil
+func eventSummary(user string) string {
+	return fmt.Sprintf("%v Spinnaker OSS Build Cop", user)
 }

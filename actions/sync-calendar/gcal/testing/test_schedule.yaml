@@ -6,6 +6,7 @@ shifts:
   user: lmn
 - startDate: Mon 15 Jun 2020
   user: xyz
+  userOverride: abc
 - startDate: Mon 22 Jun 2020
   stopDate: Sun 28 Jun 2020
   user: abc
