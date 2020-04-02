@@ -17,3 +17,4 @@
 .idea/
 *.iml
 rotation-scheduler.json
+/rotation
