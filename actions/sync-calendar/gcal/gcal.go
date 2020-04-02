@@ -65,7 +65,7 @@ func (g *GCal) Schedule(sched *schedule.Schedule) error {
 		if err != nil {
 			return fmt.Errorf("insert error with event at index %v: %v\nEvent value:\n%+v", i, err, ie.GcalEvent)
 		} else {
-			log.Printf("Added shift for %v from %v to %v", ie.User, ie.GcalEvent.Start.Date, ie.StopDateIncl)
+			log.Printf("Added shift for %v from %v to %v", ie.User, ie.GcalEvent.Start.Date, ie.StopDateIncl.Format(DateFormat))
 		}
 	}
 
