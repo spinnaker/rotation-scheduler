@@ -1,0 +1,35 @@
+on: [push]
+
+jobs:
+  test:
+    # Can be used by a developer in a fork to confirm this GHA is working as expected.
+    if: "!startsWith(github.repository, 'spinnaker/')"
+    runs-on: ubuntu-latest
+    name: Test Action Use
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - id: dates
+      run: |
+        echo "::set-output name=today::$(date '+%Y-%m-%d')"&& \
+        echo "::set-output name=day30::$(date '+%Y-%m-%d' -d '+30 days')" && \
+        echo "::set-output name=day60::$(date '+%Y-%m-%d' -d '+60 days')"
+
+    - name: schedule generate
+      uses: ./
+      with:
+        args: |
+          schedule generate --start ${{ steps.dates.outputs.today }} --stop ${{ steps.dates.outputs.day30 }} --users abc,lmn,xyz samples/schedule.yaml
+
+    - name: schedule extend
+      uses: ./
+      with:
+        args: |
+          schedule extend --stop ${{ steps.dates.outputs.day60 }} --users abc,lmn,xyz --schedule samples/schedule.yaml samples/schedule.yaml
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v2
+      with:
+        commit-message: |
+          chore(build-cop): Update build cop rotation schedule

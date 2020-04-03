@@ -1,0 +1,10 @@
+shifts:
+- startDate: Fri 03 Apr 2020
+  user: abc
+- startDate: Fri 10 Apr 2020
+  user: lmn
+- startDate: Fri 17 Apr 2020
+  user: xyz
+- startDate: Fri 24 Apr 2020
+  stopDate: Thu 30 Apr 2020
+  user: abc
