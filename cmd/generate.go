@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/scheduler"
+	"github.com/spinnaker/rotation-scheduler/schedule/scheduler"
 )
 
 var (

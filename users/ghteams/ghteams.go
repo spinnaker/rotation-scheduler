@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/google/go-github/v30/github"
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
+	"github.com/spinnaker/rotation-scheduler/users"
 )
 
 type GitHubTeamsUserSource = users.StaticSource

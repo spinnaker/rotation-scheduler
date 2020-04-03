@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
 	"github.com/spinnaker/rotation-scheduler/schedule"
+	"github.com/spinnaker/rotation-scheduler/users"
 )
 
 const (
