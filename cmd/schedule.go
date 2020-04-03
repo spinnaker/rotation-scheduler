@@ -10,9 +10,9 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users"
-	"github.com/spinnaker/rotation-scheduler/actions/generate-schedule/users/ghteams"
 	"github.com/spinnaker/rotation-scheduler/schedule"
+	"github.com/spinnaker/rotation-scheduler/users"
+	"github.com/spinnaker/rotation-scheduler/users/ghteams"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/option"
 )

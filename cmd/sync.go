@@ -11,7 +11,7 @@ import (
 	"cloud.google.com/go/httpreplay"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
-	"github.com/spinnaker/rotation-scheduler/actions/sync-calendar/gcal"
+	"github.com/spinnaker/rotation-scheduler/gcal"
 	"github.com/spinnaker/rotation-scheduler/schedule"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"

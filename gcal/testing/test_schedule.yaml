@@ -1,4 +1,4 @@
-# Generated from: go run actions/generate-schedule/main.go --start 2020-06-01 --stop 2020-07-01 --users abc,lmn,xyz --out actions/sync-calendar/gcal/testing/test_schedule.yaml
+# Generated from: rotation schedule generate --start 2020-06-01 --stop 2020-07-01 --users abc,lmn,xyz gcal/testing/test_schedule.yaml
 shifts:
 - startDate: Mon 01 Jun 2020
   user: abc
