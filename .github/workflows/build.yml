@@ -21,3 +21,18 @@ jobs:
       run: go build ./...
     - name: Test
       run: go test ./...
+
+  dockerBuild:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - id: dates
+      run: |
+        echo "::set-output name=today::$(date '+%Y-%m-%d')"&& \
+        echo "::set-output name=day30::$(date '+%Y-%m-%d' -d '+30 days')"
+    - name: schedule generate
+      uses: ./
+      with:
+        args: |
+          schedule generate --start ${{ steps.dates.outputs.today }} --stop ${{ steps.dates.outputs.day30 }} --users abc,lmn,xyz samples/schedule.yaml

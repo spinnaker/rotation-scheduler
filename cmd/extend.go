@@ -13,10 +13,10 @@ import (
 
 var (
 	extendCmd = &cobra.Command{
-		Use:              "extend [outputFile]",
-		Short:            "Extends a previously generated schedule",
-		TraverseChildren: true,
-		RunE:             executeExtend,
+		Use:   "extend [outputFile]",
+		Short: "Extends a previously generated schedule",
+		Args:  cobra.MaximumNArgs(1),
+		RunE:  executeExtend,
 	}
 
 	previousSchedulePath string

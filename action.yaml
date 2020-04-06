@@ -1,0 +1,6 @@
+name: Rotation Tool
+description: A tool to generate and extend rotation schedules, then sync them with Google Calendar.
+
+runs:
+  using: docker
+  image: Dockerfile
