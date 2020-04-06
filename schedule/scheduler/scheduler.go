@@ -65,10 +65,7 @@ func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.
 		return fmt.Errorf("cannot stop before the last shift of the previous schedule is complete")
 	}
 
-	if err := s.userSource.StartAfter(lastShift.User); err != nil {
-		return fmt.Errorf("error finding input shift owner (%v) in user source: %v", lastShift.User, err)
-	}
-
+	s.userSource.StartAfter(lastShift.User)
 	firstNewShiftStart := sched.LastShift().StopDateExclusive()
 	sched.LastShift().ClearStopDate()
 

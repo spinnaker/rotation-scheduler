@@ -127,6 +127,7 @@ func TestExtendSchedule(t *testing.T) {
 	for _, tc := range []struct {
 		desc         string
 		input        *schedule.Schedule
+		users        []string
 		durationDays int
 		stop         time.Time
 		wantErr      bool
@@ -147,6 +148,7 @@ func TestExtendSchedule(t *testing.T) {
 					},
 				},
 			},
+			users:        []string{"first", "second", "third"},
 			durationDays: 1,
 			stop:         time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC),
 			wantErr:      false,
@@ -191,6 +193,7 @@ func TestExtendSchedule(t *testing.T) {
 					},
 				},
 			},
+			users:        []string{"first", "second", "third"},
 			durationDays: 7,
 			stop:         time.Date(2020, 2, 1, 0, 0, 0, 0, time.UTC),
 			wantErr:      false,
@@ -216,9 +219,54 @@ func TestExtendSchedule(t *testing.T) {
 				},
 			},
 		},
+		{
+			desc: "last shift user no longer in rotation",
+			input: &schedule.Schedule{
+				Shifts: []*schedule.Shift{
+					{
+						StartDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+						User:      "first",
+					},
+					{
+						StartDate: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+						StopDate:  time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+						User:      "second",
+					},
+				},
+			},
+			users:        []string{"first", "third"},
+			durationDays: 1,
+			stop:         time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC),
+			wantErr:      false,
+			want: &schedule.Schedule{
+				Shifts: []*schedule.Shift{
+					{
+						StartDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+						User:      "first",
+					},
+					{
+						StartDate: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
+						User:      "second",
+					},
+					{
+						StartDate: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC),
+						User:      "third",
+					},
+					{
+						StartDate: time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC),
+						User:      "first",
+					},
+					{
+						StartDate: time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC),
+						StopDate:  time.Date(2020, 1, 5, 0, 0, 0, 0, time.UTC),
+						User:      "third",
+					},
+				},
+			},
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			s, err := NewScheduler(users.NewStaticSource("first", "second", "third"), tc.durationDays)
+			s, err := NewScheduler(users.NewStaticSource(tc.users...), tc.durationDays)
 			if err != nil {
 				t.Fatalf("error creating scheduler: %v", err)
 			}
