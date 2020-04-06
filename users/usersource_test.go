@@ -21,52 +21,74 @@ func TestNextUser(t *testing.T) {
 }
 
 func TestStartAfter(t *testing.T) {
-	ss := NewStaticSource("a", "b", "c")
-
 	for _, tc := range []struct {
 		desc       string
+		users      []string
 		startAfter string
-		wantErr    bool
 		next1      string
 		next2      string
 	}{
 		{
 			desc:       "start after a",
+			users:      []string{"a", "b", "c"},
 			startAfter: "a",
-			wantErr:    false,
 			next1:      "b",
 			next2:      "c",
 		},
 		{
 			desc:       "start after b",
+			users:      []string{"a", "b", "c"},
 			startAfter: "b",
-			wantErr:    false,
 			next1:      "c",
 			next2:      "a",
 		},
 		{
 			desc:       "start after c",
+			users:      []string{"a", "b", "c"},
 			startAfter: "c",
-			wantErr:    false,
 			next1:      "a",
 			next2:      "b",
 		},
 		{
-			desc:       "missing entry",
-			startAfter: "missing",
-			wantErr:    true,
+			desc:       "unsorted mixed cases",
+			users:      []string{"C", "b", "A"},
+			startAfter: "a",
+			next1:      "b",
+			next2:      "c",
+		},
+		{
+			desc:       "missing entry easy next",
+			users:      []string{"a", "c", "d"},
+			startAfter: "b",
+			next1:      "c",
+			next2:      "d",
+		},
+		{
+			desc:       "missing entry at front",
+			users:      []string{"b", "c", "d"},
+			startAfter: "a",
+			next1:      "b",
+			next2:      "c",
+		},
+		{
+			desc:       "missing entry at back",
+			users:      []string{"b", "c", "d"},
+			startAfter: "z",
+			next1:      "b",
+			next2:      "c",
+		},
+		{
+			desc:       "non-letter startAfter",
+			users:      []string{"b", "c", "d"},
+			startAfter: "123",
+			next1:      "b",
+			next2:      "c",
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := ss.StartAfter(tc.startAfter)
-			if tc.wantErr && err == nil {
-				t.Errorf("err expected and not received.")
-			} else if !tc.wantErr && err != nil {
-				t.Errorf("got error from StartAfter: %v:", err)
-			} else if tc.wantErr {
-				// Successfully invoked error condition
-				return
-			}
+			ss := NewStaticSource(tc.users...)
+
+			ss.StartAfter(tc.startAfter)
 
 			got := ss.NextUser()
 			if tc.next1 != got {
