@@ -29,6 +29,13 @@ func TestStartAfter(t *testing.T) {
 		next2      string
 	}{
 		{
+			desc:       "start after missing, single element",
+			users:      []string{"a"},
+			startAfter: "missing",
+			next1:      "a",
+			next2:      "a",
+		},
+		{
 			desc:       "start after a",
 			users:      []string{"a", "b", "c"},
 			startAfter: "a",
@@ -99,5 +106,15 @@ func TestStartAfter(t *testing.T) {
 				t.Errorf("next2: want %v, got %v", tc.next2, got)
 			}
 		})
+	}
+}
+
+func TestContains(t *testing.T) {
+	ss := NewStaticSource("a")
+
+	if !ss.Contains("a") {
+		t.Errorf("should contain a")
+	} else if ss.Contains("b") {
+		t.Errorf("should not contain b")
 	}
 }

@@ -22,12 +22,14 @@ func TestScheduleValidate(t *testing.T) {
 		{
 			desc:     "empty schedule",
 			schedule: &Schedule{},
+			wantErr:  true,
 		},
 		{
 			desc: "empty shifts",
 			schedule: &Schedule{
 				Shifts: []*Shift{},
 			},
+			wantErr: true,
 		},
 		{
 			desc: "invalid shift",

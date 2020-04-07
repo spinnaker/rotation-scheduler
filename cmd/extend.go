@@ -20,12 +20,16 @@ var (
 	}
 
 	previousSchedulePath string
+
+	prune bool
 )
 
 func init() {
 	extendCmd.Flags().StringVarP(&previousSchedulePath, "schedule", "s", "", "Required. Filepath to the schedule to extend.")
 	_ = extendCmd.MarkFlagRequired("schedule")
 	_ = extendCmd.MarkFlagFilename("schedule", "yaml")
+
+	extendCmd.Flags().BoolVarP(&prune, "prune", "p", false, "Prune removes all shifts before the current shift and reschedules all shifts if shift owners are no longer in rotation.")
 
 	scheduleCmd.AddCommand(extendCmd)
 }
@@ -50,7 +54,7 @@ func executeExtend(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("error creating new scheduler: %v", err)
 	}
 
-	err = schdlr.ExtendSchedule(sched, stopTime)
+	err = schdlr.ExtendSchedule(sched, stopTime, prune)
 	if err != nil {
 		return fmt.Errorf("error generating new schedule: %v", err)
 	}
