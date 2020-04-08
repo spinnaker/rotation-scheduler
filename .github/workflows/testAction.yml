@@ -12,7 +12,7 @@ jobs:
 
     - id: dates
       run: |
-        echo "::set-output name=today::$(date '+%Y-%m-%d')"&& \
+        echo "::set-output name=day-30::$(date '+%Y-%m-%d' -d '-30 days')"&& \
         echo "::set-output name=day30::$(date '+%Y-%m-%d' -d '+30 days')" && \
         echo "::set-output name=day60::$(date '+%Y-%m-%d' -d '+60 days')"
 
@@ -20,13 +20,19 @@ jobs:
       uses: ./
       with:
         args: |
-          schedule generate --start ${{ steps.dates.outputs.today }} --stop ${{ steps.dates.outputs.day30 }} --users abc,lmn,xyz samples/schedule.yaml
+          schedule generate --start ${{ steps.dates.outputs.day-30 }} --stop ${{ steps.dates.outputs.day30 }} --users abc,lmn,xyz samples/schedule.yaml
 
-    - name: schedule extend
+    - name: cat before
+      run: cat samples/schedule.yaml
+
+    - name: schedule prune and extend
       uses: ./
       with:
         args: |
-          schedule extend --stop ${{ steps.dates.outputs.day60 }} --users abc,lmn,xyz --schedule samples/schedule.yaml samples/schedule.yaml
+          schedule extend --stop ${{ steps.dates.outputs.day60 }} --prune --users abc,xyz --schedule samples/schedule.yaml samples/schedule.yaml
+
+    - name: cat after
+      run: cat samples/schedule.yaml
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v2

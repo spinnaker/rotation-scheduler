@@ -12,6 +12,10 @@ const (
 	DateFormat = "Mon 02 Jan 2006"
 )
 
+var (
+	today = func() time.Time { return time.Now().Truncate(24 * time.Hour) }
+)
+
 // Scheduler creates or extends a new rotation schedule.
 type Scheduler struct {
 	userSource        users.Source
@@ -55,9 +59,22 @@ func (s *Scheduler) Schedule(start, stop time.Time) (*schedule.Schedule, error) 
 
 // ExtendSchedule takes a previously generated schedule and extends it. The user rotation continues as normal from the
 // last shift in the schedule.
-func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.Time) error {
+//
+// If prune is true:
+// * all shifts completed in the past are purged, and all current and future shifts are checked for owners in the
+// current rotation.
+// * If a shift is assigned to a user that is no longer in the rotation (including if the missing user is in the
+// userOverride field), that shift and all future shifts are rescheduled.
+// * Rescheduled shifts do not carry over previous userOverride values.
+// * Shifts originally assigned to a missing rotation member, but have a userOverride owner that is in the
+// current rotation, are not be rescheduled.
+func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.Time, prune bool) error {
 	if err := sched.Validate(); err != nil {
 		return fmt.Errorf("cannot extend invalid schedule: %v", err)
+	}
+
+	if prune {
+		s.prune(today(), sched)
 	}
 
 	lastShift := sched.LastShift()
@@ -70,6 +87,59 @@ func (s *Scheduler) ExtendSchedule(sched *schedule.Schedule, stopInclusive time.
 	sched.LastShift().ClearStopDate()
 
 	return s.extendSchedule(sched, firstNewShiftStart, stopInclusive)
+}
+
+func (s *Scheduler) prune(start time.Time, sched *schedule.Schedule) {
+	s.pruneOldShifts(start, sched)
+	s.pruneNotFoundUsers(sched)
+}
+
+func (s *Scheduler) pruneOldShifts(start time.Time, sched *schedule.Schedule) {
+	for i, shift := range sched.Shifts {
+		if i != 0 && start.Before(shift.StartDate) {
+			// prune start time happened sometime in between the last shift and this shift.
+			sched.Shifts = sched.Shifts[(i - 1):]
+			break
+		} else if start == shift.StartDate || (shift == sched.LastShift() && start == shift.StopDate) {
+			// prune start time landed on a shift start or stop time.
+			sched.Shifts = sched.Shifts[i:]
+			break
+		} else if shift == sched.LastShift() && start.After(shift.StopDate) {
+			// entire schedule is in the past.
+			s.userSource.StartAfter(sched.LastShift().GetUser())
+			sched.Shifts = []*schedule.Shift{
+				{
+					StartDate: start,
+					User:      s.userSource.NextUser(),
+				},
+			}
+			sched.LastShift().SetStopDateExclusive(s.nextShiftTime(sched.LastShift().StartDate))
+			break
+		}
+	}
+}
+
+// pruneNotFoundUsers truncates the schedule at the first shift where a user is no longer in the rotation group.
+// The intent is to not reschedule too aggressively, so if a removed user shift has been swapped with someone else, that
+// shift will not be removed.
+func (s *Scheduler) pruneNotFoundUsers(sched *schedule.Schedule) {
+	for i, shift := range sched.Shifts {
+		if !s.userSource.Contains(shift.GetUser()) {
+			sched.Shifts = sched.Shifts[:i]
+
+			if sched.LastShift() == nil {
+				s.userSource.StartAfter(shift.GetUser())
+				sched.Shifts = append(sched.Shifts, &schedule.Shift{
+					StartDate: shift.StartDate,
+					User:      s.userSource.NextUser(),
+				})
+				sched.LastShift().SetStopDateExclusive(s.nextShiftTime(shift.StartDate))
+			} else {
+				sched.LastShift().SetStopDateExclusive(shift.StartDate)
+			}
+			return
+		}
+	}
 }
 
 func (s *Scheduler) extendSchedule(sched *schedule.Schedule, start, stopInclusive time.Time) error {

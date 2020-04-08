@@ -12,11 +12,13 @@ type Source interface {
 	// insensitively) outside of the first or last user, the first user is returned.
 	StartAfter(user string)
 	NextUser() string
+	Contains(user string) bool
 }
 
 // StaticSource is a base implementation of static list of usernames.
 type StaticSource struct {
-	nextUser *ring.Ring
+	nextUser  *ring.Ring
+	usernames map[string]bool
 }
 
 // NewStaticSource creates a StaticSource of all lower-cased and sorted from the specified users.
@@ -26,8 +28,12 @@ func NewStaticSource(users ...string) *StaticSource {
 	}
 	sort.Strings(users)
 
-	ss := &StaticSource{nextUser: ring.New(len(users))}
+	ss := &StaticSource{
+		nextUser:  ring.New(len(users)),
+		usernames: make(map[string]bool, len(users)),
+	}
 	for _, u := range users {
+		ss.usernames[u] = true
 		ss.nextUser.Value = u
 		ss.nextUser = ss.nextUser.Next()
 	}
@@ -41,7 +47,7 @@ func (ss *StaticSource) StartAfter(user string) {
 	for linksChecked := 0; linksChecked <= ss.nextUser.Len(); linksChecked++ {
 		prevUser := ss.nextUser.Prev().Value.(string)
 		nextUser := ss.nextUser.Value.(string)
-		if nextUser < prevUser {
+		if nextUser <= prevUser {
 			// We need the beginning of the cycle in case the user doesn't fall in between any of the existing users.
 			beginning = ss.nextUser
 		}
@@ -58,4 +64,9 @@ func (ss *StaticSource) NextUser() string {
 	u := ss.nextUser.Value.(string)
 	ss.nextUser = ss.nextUser.Next()
 	return u
+}
+
+func (ss *StaticSource) Contains(user string) bool {
+	_, ok := ss.usernames[user]
+	return ok
 }

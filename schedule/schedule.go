@@ -32,7 +32,7 @@ func (sch *Schedule) Validate() error {
 	}
 
 	if sch.LastShift() == nil {
-		return nil
+		return fmt.Errorf("shifts cannot be empty")
 	}
 
 	var previousStartDate time.Time
@@ -85,6 +85,13 @@ type Shift struct {
 	// StopDate is inclusive, and must only be used on the last Shift of a Schedule. For all other Shifts, the stop date
 	// is implied by the next shift's StartDate, and this value should remain the zero `time.Time` value.
 	StopDate time.Time `json:"stopDate,omitempty"`
+}
+
+func (sh *Shift) GetUser() string {
+	if sh.UserOverride != "" {
+		return sh.UserOverride
+	}
+	return sh.User
 }
 
 // StartDateExclusive returns the date before the start date, which is the StopDateInclusive of the previous shift.
