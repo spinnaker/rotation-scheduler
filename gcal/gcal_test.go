@@ -17,6 +17,9 @@ const (
 	testCalendarID = "spinbot@spinnaker.io"
 )
 
+// schedule.replay file generated with:
+// JSON_KEY=$(cat rotation-scheduler.json | base64 -w 0)
+// go run rotation.go calendar sync --record ./gcal/testing/schedule.replay --jsonKey $JSON_KEY ./gcal/testing/test_schedule.yaml
 func TestSchedule(t *testing.T) {
 	replayer, err := httpreplay.NewReplayer("testing/schedule.replay")
 	if err != nil {
