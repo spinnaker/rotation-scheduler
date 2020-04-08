@@ -8,6 +8,16 @@ import (
 	"cloud.google.com/go/httpreplay"
 )
 
+var (
+	wellKnownDomains = []string{
+		"armory.io",
+		"google.com",
+		"netflix.com",
+	}
+)
+
+// Replay generated from:
+// go run rotation.go schedule generate --record ./users/ghteams/testing/teams.replay --github spinnaker,build-cops,$GITHUB_TOKEN --start 2020-05-01 --stop 2020-06-01 --domains armory.io,netflix.com,google.com
 func TestNewGitHubTeamsUserSource(t *testing.T) {
 	r, err := httpreplay.NewReplayer("testing/teams.replay")
 	if err != nil {
@@ -19,7 +29,7 @@ func TestNewGitHubTeamsUserSource(t *testing.T) {
 		t.Fatalf("error creating replayer client: %v", err)
 	}
 
-	ghUserSrc, err := NewGitHubTeamsUserSource(client, "spinnaker", "build-cops")
+	ghUserSrc, err := NewGitHubTeamsUserSource(client, "spinnaker", "build-cops", wellKnownDomains...)
 	if err != nil {
 		t.Fatalf("error getting users: %v", err)
 	}
@@ -33,14 +43,13 @@ func TestNewGitHubTeamsUserSource(t *testing.T) {
 	want := []string{
 		"ajordens",
 		"cfieber",
-		"duftler",
 		"ethanfrogers",
 		"ezimanyi",
 		"jonsie",
-		"maggieneterval",
-		"plumpy",
+		"mneterval@google.com",
+		"plumpy@google.com",
 		"robzienert",
-		"ttomsu",
+		"ttomsu@google.com",
 	}
 
 	if !reflect.DeepEqual(got, want) {

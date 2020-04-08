@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/spinnaker/rotation-scheduler/schedule"
@@ -61,7 +62,7 @@ func (g *GCal) Schedule(sched *schedule.Schedule) error {
 	}
 
 	for i, ie := range internalEvents {
-		_, err := g.svc.Events.Insert(g.CalendarID, ie.GcalEvent).SendUpdates("none").Do()
+		_, err := g.svc.Events.Insert(g.CalendarID, ie.GcalEvent).SendUpdates("externalOnly").Do()
 		if err != nil {
 			return fmt.Errorf("insert error with event at index %v: %v\nEvent value:\n%+v", i, err, ie.GcalEvent)
 		} else {
@@ -103,6 +104,11 @@ func internalEvents(sched *schedule.Schedule) []*internalEvent {
 			End: &calendar.EventDateTime{
 				Date: stopDateExcl.Format(DateFormat), // End.Date is exclusive
 			},
+		}
+		if strings.Contains(u, "@") {
+			event.Attendees = append(event.Attendees, &calendar.EventAttendee{
+				Email: u,
+			})
 		}
 		intEvents[i] = &internalEvent{
 			GcalEvent:    event,

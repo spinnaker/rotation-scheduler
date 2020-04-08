@@ -29,7 +29,7 @@
   },
   "Entries": [
     {
-      "ID": "3a421c12f524fc4f",
+      "ID": "ba82eb6d8e74352f",
       "Request": {
         "Method": "POST",
         "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/clear?alt=json\u0026prettyPrint=false",
@@ -60,7 +60,7 @@
             "no-cache, no-store, max-age=0, must-revalidate"
           ],
           "Date": [
-            "Tue, 31 Mar 2020 16:41:49 GMT"
+            "Wed, 08 Apr 2020 18:54:47 GMT"
           ],
           "Expires": [
             "Mon, 01 Jan 1990 00:00:00 GMT"
@@ -80,10 +80,10 @@
       }
     },
     {
-      "ID": "d50ec4d3db1f3fea",
+      "ID": "a34ca389867d4e92",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=externalOnly",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -122,10 +122,10 @@
             "application/json; charset=UTF-8"
           ],
           "Date": [
-            "Tue, 31 Mar 2020 16:41:49 GMT"
+            "Wed, 08 Apr 2020 18:54:47 GMT"
           ],
           "Etag": [
-            "\"3171345818964000\""
+            "\"3172744174606000\""
           ],
           "Expires": [
             "Mon, 01 Jan 1990 00:00:00 GMT"
@@ -150,14 +150,14 @@
             "1; mode=block"
           ]
         },
-        "Body": "H4sIAAAAAAAAAJVS2W7bMBD8FYN99UEdcWQBRQInaZCiaIE6R6OmD5S4lhnxUHnYiA3/e5YGnD4UCJDXnRnOzix3pBOak5I0TILmzH6CNWhPhgQ8a3H+RLLkNMnykyIpZtOcUvpEEBVR0+U9NNAlKaPs+VTpbtYKz6GuDTKcZz64+LLRS2EVcByuvJLfhO5wvPK+d+Vkstlsxq0xrYRxY9TkuMfksMcZCP6ZbX9uqofvkm2vXh5v5yv2zH2t3EmVSlpd34tHVbRNNu9r9XXNr+bb5lqGWn2x1a+bwB4KtG0sMA9x5ZSmdESzUZbcJtMyT8p8NsZMFZJCz98h5UUaSS4oxewLkljdDBa90Jp1YAc/FovBPAjJBxemPzoaS8odAcWERIFDcm38uTuKxuLQE8glKb0NsB8SY1umxRY+LMS2rY+imOEtwnREE4IoxBP/jxURExdM3t1cvnvO838HOhj/DaAbfIoOiQWFHwisiwbBwSUsWZC4ypJJB5hoDdYKDoj/3hEFfmVixb3pQ+wJxcFHMKH7P/v9KykAWqSPAgAA"
+        "Body": "H4sIAAAAAAAAAJVS224TMRD9lci85uK9NNmuhKjSBCgi8JAimlAevPZk14m93viSQKP8e8eVAg9IlXidc87MOTNzIjvZClISzhS0gtk3cIDWkz4Bz2qsP5IsmaSTPE8m+ZiOKaWPBFEZNbRQe5dXnG+3TXNI+P5aJONM6lAgw3nmg4udTbuRVoPAYuO1+izbHZYb7ztXjkbH43FYG1MrGHKjRxcfoxcf70CKt4tZ4/jDgq70ly3TnWEfV79W2fxqPZuni1R5cV/XPJt2lf50EPPpE/+gQqXf2/XDXWDfoxdugXmIllOa0gHNB7S4T4ryKi/zyRAzrZEUOvEKKaNZJLmgNbO/kcQq3lt2sm3ZDmzv63LZmwapRO/WdJeJxpLyREAzqVDgkFwZf+MuoqE0sSOoDSm9DXDuE2Nr1son+G8hbtv6KIoZ/kQYD2hCEIV44n+xImLylqlvd7NXz3nz90Avg/cBWo6taJ9Y0PhAYF0cEBzMYMOCQisbphxgogNYKwUg/uNENPjGxBV3pgtxTygOPoIJPf88n58BaYcLKI8CAAA="
       }
     },
     {
-      "ID": "19f84d62facf74af",
+      "ID": "d467a7f4b1cfe912",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=externalOnly",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -196,10 +196,10 @@
             "application/json; charset=UTF-8"
           ],
           "Date": [
-            "Tue, 31 Mar 2020 16:41:50 GMT"
+            "Wed, 08 Apr 2020 18:54:47 GMT"
           ],
           "Etag": [
-            "\"3171345819608000\""
+            "\"3172744175394000\""
           ],
           "Expires": [
             "Mon, 01 Jan 1990 00:00:00 GMT"
@@ -224,14 +224,14 @@
             "1; mode=block"
           ]
         },
-        "Body": "H4sIAAAAAAAAAJVSXW8TMRD8K5F5zYedu6buSYgqDYQiqkgEVBrKg++8uZj4C5+dlET576wrBR6QKvG6M7Ozs7tHslVWkoo0QoOVIryCHdhI+gSiaLH+SAp2yYrygrOrCeWU0keCqMoaaTh3lz62zvhaS/HD6KJ0tuANMrooYupyZ2fXKhiQWNxEoz8qu8XyJkbfVaPRfr8fts61GoaNM6PzHKPnOd6Akq9Xc1ou5rxo3n+y9ZjtH8zT9uHex3p2R+txeVjM79qmmPrafNjJt9NDM9epNu/C6uttEvccbZsAIkIeeUzHdECLQcE+s0lVsqq8GmKmFZKSly+QOC0zqUvGiPALSdrY3tIra8UWQm+xXPamSWnZu3H+7OgCqY4EjFAaBR2Saxevu7NoqFzuCHpNqhgSnPrEhVZYdYD/FuK2Q8yinOFPhMmAcoIo5BP/g7GLjKkbob/czl485/XfAz0b/0xgG2xF+ySAwQeC0GWD1MEM1iJpHGUtdAeYaAchKAmIfzsSA3Hj8oq98ynvCcUpZpDR0/fT6TcNqIMHjwIAAA=="
+        "Body": "H4sIAAAAAAAAAJVSy24aQRD8FTS5YtgnCytFsbCdyFG0KIIIx3EOszu9y8A81vMABcS/p8cS9iGSpVy7qrqruvtEdlwxUpKGClCMmg+wB+XIkICjHdafSBoXSZFlcZGnsyyKoieCKA+aWcEmU1/Q4tlCs61nLJcp5NvWTpFhHXXehs5atdxIYFjcOCm+cbXD8sa53pbj8eFwGHVadwJGjZbji4/xi49PwNnHxYrtqu0mrpK7tHmoxM+k54v197heVaJa97I5dl2Tzvtaft2zu/mx+SJ8LT+bx4d7T9fBS2OAOgiWkyiJrqLsKpqu4mmZZ2VWjDDTI5J8z94hTWZFIFkvJTV/kCSkGix7rhTdgRkslsvB3HPBBje6v0zUhpQnApJygQKL5Fq7a3sRjbgOHUG0pHTGw3lItOmo4kf4byFu27ggChleI0wwAkEUwon/weI8YPyGih/3t++e8/rtQC+Dnz2oBltFQ2JA4gOBsWGAt3ALLfUCrbRUWMBEezCGM0D814lIcBsdVtzr3oc9odi7AMbR+ff5/BdOCcSxjwIAAA=="
       }
     },
     {
-      "ID": "18f40b6e2559b2a4",
+      "ID": "86b1437e72321e34",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=externalOnly",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -270,10 +270,10 @@
             "application/json; charset=UTF-8"
           ],
           "Date": [
-            "Tue, 31 Mar 2020 16:41:50 GMT"
+            "Wed, 08 Apr 2020 18:54:48 GMT"
           ],
           "Etag": [
-            "\"3171345820448000\""
+            "\"3172744176154000\""
           ],
           "Expires": [
             "Mon, 01 Jan 1990 00:00:00 GMT"
@@ -298,14 +298,14 @@
             "1; mode=block"
           ]
         },
-        "Body": "H4sIAAAAAAAAAJVSy27bMBD8FYO9+kG9EkNA0UBxm7po04Mb2HDTA02uZFqkSPNhJTH87yUNODkUCNDrzszOzu4eUcs7hkpEiYCOEfMBDtA5NETgSBPqjyhLrpMsL6YpzvMpxvgRBZRHTbqrYZcWel/46QFTd623Bu85Y21gWEect7Gz6mpuJLBQ3DopvvOuDeWtc9qWk0nf9+NGqUbAmCo5ucwxOc/xCTj7+ENquV6q5/tV9XS/esjZrtqxGevJ13lPl6Jd39mGZpXeyG8H9rl6oXfCb+QXs17NPVlOgy01QBycR8YpHuFslCW/kqsyT8oCj0OmdSB5zd4hpWkeSdZLScxzIJENHSw07zrSghn8XCwGleeCDW6Vvjgqg8ojAkm4CAIbyBvlbuxFNOYqdgRRo9IZD6chUqYhHX+B/xaGbRsXRTHDa4SrUVKggEI88T9YmkaM3xLxMJ+9e86btwOdjfceOhpa4SEyIMMDgbHRwFuYQU28CKPURFgIiQ5gDGcQ8N9HJMFtVVyxVtrHPQWxdxFM8OnP6fQXAKUGc48CAAA="
+        "Body": "H4sIAAAAAAAAAJVSy27bMBD8FYO5+kFRcuQKKBo4TtsEMYLCSZq66YEiVzJtPlQ+bMSG/z1kALeHAgF63ZnZndndA9oIzVGFGJWgObVnsAXtUR+Bp22sP6M8K0lZFFl5no0LjPEziqhImlWgeaNIKcmmDtbYrOBFmRvGJpHhPPXBpc5GN8Iq4LG48kreCr1JYu87V41Gu91u2BrTShgyo0YnH6M3H59A8I/06+NqTpZ+vuZurrzgTzdbtr7Cy9m3fE4+rH/s25bl065WN1t+Nd2zLzLU6rNdPl0H+j15YRaoh2SZYIIHuBjgyX02qcZFVUyGMdMykkLH3yOVZSK5oBS1L5FEa9ZbdEJrugHbu1ssetMgJO9dmu400VhUHRAoKmQUuEiujb9wJ9FQmNQRZIMqbwMc+8jYlmqxh/8Wxm1bn0Qpw58I54NsjCIK6cT/YIQkTFxS+XA9e/ecF38P9Db4dwDNYivcRxZUfCCwLg0IDmbQ0CCjlYZKBzHRFqwVHCL+84AU+JVJK+5MF9Keojj4BGb4+Ot4fAWmfbI/jwIAAA=="
       }
     },
     {
-      "ID": "6facdf30d0c30484",
+      "ID": "9c8bca9a77339c7f",
       "Request": {
         "Method": "POST",
-        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=none",
+        "URL": "https://www.googleapis.com/calendar/v3/calendars/spinbot%40spinnaker.io/events?alt=json\u0026prettyPrint=false\u0026sendUpdates=externalOnly",
         "Header": {
           "Accept-Encoding": [
             "gzip"
@@ -344,10 +344,10 @@
             "application/json; charset=UTF-8"
           ],
           "Date": [
-            "Tue, 31 Mar 2020 16:41:50 GMT"
+            "Wed, 08 Apr 2020 18:54:48 GMT"
           ],
           "Etag": [
-            "\"3171345821336000\""
+            "\"3172744176986000\""
           ],
           "Expires": [
             "Mon, 01 Jan 1990 00:00:00 GMT"
@@ -372,7 +372,7 @@
             "1; mode=block"
           ]
         },
-        "Body": "H4sIAAAAAAAAAJVS227aQBD9FbR95bJrg3EsRYkIpUrVkgfa0ND0YW0PZuu9uHsBNYh/72wkkodKkfI655w5c2bmSFqha1KQikvQNbcfYA/akz4BzxusP5KUTVk6nuQJS9OMUvpIEBVRk00kqEnbeM5bybQ20wsznob9tEKG89wHFzsbvRVWQY3FnVfyi9Atlnfed64YjQ6Hw7AxppEwrIwanecYPc9xBaK+XP6+d5s1ZTyp6cN6Ycv5IpQqT+/WOV2m98ky+dpU6awr1ed9/XH2VH2SiC/s5sdt4OscbSsL3EMcOaEJHdB0kLJvLCvGrJjQIWbaICl09RukLMsjyQWluP2LJF5WvVUntOYt2N7datWbBSHr3o3pzo7GkuJIQHEhUeCQXBp/7c6ioTCxI8gtKbwNcOoTYxuuxRO8W4jbtj6KYoaXCNkgSQiiEE/8P3YRMXHD5ffb+ZvnvH490LPxnwC6wla0TywofCCwLhoEB3PY8iBxlC2XDjDRHqwVNSD+80gU+J2JK+5MF+KeUBx8BBk9/Tqd/gH86459jwIAAA=="
+        "Body": "H4sIAAAAAAAAAJVSy27bQAz8FWN79UOv2LKAoIGTJk3RpAcncaymh5WWkrfeh7oPGbHhfy83gNtDgQC9cmbIGZIHsuWKkYLUVIBi1HyAHpQjQwKOtlh/IWk8S2ZZFs+m83waRdELQZQHTSrZNK1YfaYpNGBcn8qmp5LTHBnWUedt6KxVw40EhsWNk+IrV1ssb5zrbDGZ7Ha7cat1K2Bcazk5+Zi8+fgInJ3fJfH2/uc9L2/u4iq5FqV8emWf1/tqVSbrVdytH9q2ThddJb/07NNiX98IX8lrUz7feroKXmoD1EGwnERJNIqyUZQ/xHlxlhVZPsZMJZJ8x94hZfM0kKyXkppXJNGqHiw7rhTdghl8Wy4HC88FG1zq7jRRG1IcCEjKBQoskivtLuxJNOY6dATRkMIZD8ch0aaliu/hv4W4beOCKGT4E2E6ShKCKIQT/4vNA8YvqXi8vXr3nBd/D/Q2+JcHVWOraEgMSHwgMDYM8BauoKFeoJWGCguYqAdjOAPEvx+IBLfRYcWd7nzYE4q9C2AcHX8cj78B8v4mlo8CAAA="
       }
     }
   ]

@@ -30,6 +30,8 @@ var (
 
 	userList    []string
 	githubFlags []string
+
+	emailDomains []string
 )
 
 func init() {
@@ -41,6 +43,8 @@ func init() {
 	scheduleCmd.PersistentFlags().StringSliceVarP(&userList, "users", "u", []string{}, "Set of users for the rotation. Required if --github* options are not specified.")
 
 	scheduleCmd.PersistentFlags().StringSliceVarP(&githubFlags, "github", "g", []string{}, "Fetch the user list from GitHub. Order of args must be 'organization,team,accessToken'. Must specify an access token with read:org permissions.")
+
+	scheduleCmd.PersistentFlags().StringSliceVar(&emailDomains, "domains", []string{"*"}, "Only include email addresses from --github that match these domains. A single value of '*' will allow any domain. Use '--domains []' to only use GitHub usernames.")
 
 	rootCmd.AddCommand(scheduleCmd)
 }
@@ -71,7 +75,7 @@ func userSrc() (users.Source, error) {
 			return nil, err
 		}
 		client, closer, err := ghHttpClient(github)
-		userSrc, err = ghteams.NewGitHubTeamsUserSource(client, github.org, github.team)
+		userSrc, err = ghteams.NewGitHubTeamsUserSource(client, github.org, github.team, emailDomains...)
 		if err != nil {
 			return nil, fmt.Errorf("error creating GitHub users source: %v", err)
 		}
