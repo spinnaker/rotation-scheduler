@@ -20,7 +20,10 @@ import (
 var (
 	scheduleCmd = &cobra.Command{
 		Use:   "schedule",
-		Short: "Schedule creation and extension functions",
+		Short: "Schedule creation and extension functions.",
+		Long: "These options control the shift output, like providing the user list " +
+			"(or how to get a user list) and how long to make each shift. For GitHub team integration, " +
+			"users can be invited to their shift by making their email public.",
 	}
 
 	stopStr  string
@@ -46,7 +49,7 @@ func init() {
 
 	scheduleCmd.PersistentFlags().StringSliceVar(&emailDomains, "domains", []string{"*"}, "Only include email addresses from --github that match these domains. A single value of '*' will allow any domain. Use '--domains []' to only use GitHub usernames.")
 
-	rootCmd.AddCommand(scheduleCmd)
+	RootCmd.AddCommand(scheduleCmd)
 }
 
 type githubDetails struct {

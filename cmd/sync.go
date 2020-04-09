@@ -21,9 +21,13 @@ import (
 var (
 	syncCmd = &cobra.Command{
 		Use:   "sync scheduleFilePath",
-		Short: "Sync a schedule to a shared calendar",
-		Args:  cobra.ExactValidArgs(1),
-		RunE:  executeSync,
+		Short: "Sync a schedule to a shared calendar.",
+		Long: `A dedicated user to own these events is **strongly** recommended. 
+When a schedule of shifts is sync'ed, all events on that user's primary calendar 
+are cleared and each shift is added. The service account must be authorized to do 
+this to another users's calendar by granting it G Suite's "Domain-wide Delegation."`,
+		Args: cobra.ExactValidArgs(1),
+		RunE: executeSync,
 	}
 
 	jsonKeyBase64 string
