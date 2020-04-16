@@ -14,9 +14,15 @@ import (
 var (
 	extendCmd = &cobra.Command{
 		Use:   "extend [outputFile]",
-		Short: "Extends a previously generated schedule",
-		Args:  cobra.MaximumNArgs(1),
-		RunE:  executeExtend,
+		Short: "Extends a previously generated schedule.",
+		Long: `Once an initial schedule is in place, time will pass and that schedule
+needs to be extended further into the future. During that time, users sometimes get 
+added or removed from the rotation. By default, the previous scheduled shifts won't be modified.
+if '--prune' is true, however, all shifts are reviewed to ensure a current member of the rotation
+owns that shift. If a shift is found from a now-unknown user, shifts from that point forward are
+rescheduled (regenerated) with the current rotation membership.`,
+		Args: cobra.MaximumNArgs(1),
+		RunE: executeExtend,
 	}
 
 	previousSchedulePath string

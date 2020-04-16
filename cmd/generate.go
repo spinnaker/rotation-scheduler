@@ -12,9 +12,18 @@ import (
 var (
 	generateCmd = &cobra.Command{
 		Use:   "generate [outputFile]",
-		Short: "Generates a new schedule",
-		Args:  cobra.MaximumNArgs(1),
-		RunE:  executeGenerate,
+		Short: "Generates a new schedule.",
+		Long: `Example invocation:
+<pre>
+$ rotation schedule generate \
+    schedule.yaml \
+    --start 2020-03-01 \
+    --stop 2020-04-01 \
+    --users abc,lmn,xyz
+</pre>
+`,
+		Args: cobra.MaximumNArgs(1),
+		RunE: executeGenerate,
 	}
 
 	startStr  string
@@ -24,7 +33,7 @@ var (
 func init() {
 	generateCmd.Flags().StringVar(&startStr, "start", "",
 		"Optional. Generate schedule starting on this date (inclusive). "+
-			"Defaults to tomorrow's date. Must be in the format "+startStopFormat)
+			"Defaults to tomorrow's date. Must be in the format yyyy-mm-dd.")
 
 	scheduleCmd.AddCommand(generateCmd)
 }
