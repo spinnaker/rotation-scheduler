@@ -86,9 +86,18 @@ shifts:
   user: ezimanyi
 ```
 
-Sync schedule to Google Calendar. If `user` fields are email addresses, the email address is added as an event attendee.
-The `--calendarID` **must** be a G Suite user account dedicated for this purpose, as all existing events are deleted 
-during a sync!
+## Sync schedule to Google Calendar. 
+
+Google Calendar integration works by specifying a dedicated. non-human user (specified with `--calendarID`) to own all 
+the Calendar events in the schedule. Each rotation user can then 
+[add that user's calendar to their own](https://support.google.com/calendar/answer/37100) to see all of the current 
+shifts.
+
+> NOTE: This dedicated user is **strongly** recommended, because during each sync, all events on that calendar are 
+> deleted before the new shifts are added. You wouldn't want your personal calendar to be cleared accidentally.
+
+Optionally, each `user` (or `userOverride`) field can be an email address, in which case that email would be invited as
+an attendee to that Calendar event.
 
 The `--jsonKey` is a Google Cloud Platform service account with
 [domain-wide delegation](https://developers.google.com/admin-sdk/directory/v1/guides/delegation).
